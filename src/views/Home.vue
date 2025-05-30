@@ -1,8 +1,23 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import LeftTabs from '@/components/Home/LeftTabs.vue';
 import FilterBox from '@/components/Home/FilterBox.vue';
 import PostList from '@/components/Home/PostList.vue';
 import Pagination from '@/components/Home/Pagination.vue';
+import { getPostList } from '@/api';
+
+const fetchPostList = async () => {
+  const { data } = await getPostList({
+    pageNum: 1,
+    pageSize: 10 
+  })
+  console.log(data);
+  
+}
+
+onMounted(() => {
+  fetchPostList()
+})
 
 </script>
 
