@@ -41,7 +41,8 @@ export interface TrendingTopic {
 
 // 分页器数据相关
 export interface PaginationData {
-    index: number,
-    total: number,
-    size: number
+    current: number,
+    pages: number,
+    size: number,
+    total: number
 }

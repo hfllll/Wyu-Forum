@@ -12,36 +12,25 @@ const categoryList = ref<PostCategory[]>([])
 const topicList = ref<TrendingTopic[]>([])
 
 const paginationData = reactive<PaginationData>({
-  index: 1,
+  pages: 1,
   total: 1,
-  size: 10
+  size: 10,
+  current: 1
 })
 
-// const fetchPostList = async () => {
 
-//   try{
-//     const { data: { records } } = await getPostList({
-//       pageNum: 1,
-//       pageSize: 10 
-//     })
-//     console.log('records', records);
-//     postList.value = records
-
-//   }catch(err) {
-//     console.log('出现错误ERROR：', err);
-//   }
-
-// }
-
-const fetchPostList = async (num = 1, size = 10) => {
-  paginationData.index = num
+const fetchPostList = async (num:number = 1, pageSize: number = 10) => {
   try{
-    const { data: { records, total } } = await getPostList({
+    const { data: { records, total, size, pages, current } } = await getPostList({
       pageNum: num,
-      pageSize: size
+      pageSize: pageSize
     })
     postList.value = records
     paginationData.total = total
+    paginationData.pages = pages
+    paginationData.size = size
+    paginationData.current = current
+
   }catch(err) {
     console.log('出现错误ERROR：', err);
   }
@@ -64,6 +53,21 @@ const fetchTopic = async () => {
     topicList.value = data
   }catch(err){
     console.log('出现错误ERROR：', err);
+  }
+}
+
+const paginationClick = (index: number) => {
+  console.log('index', index);
+  
+  if (index === -1){
+    if (paginationData.current <= 1) return
+    fetchPostList(paginationData.current - 1)  
+  }else if(index === 9999){
+    if (paginationData.current >= paginationData.pages) return
+    fetchPostList(paginationData.current + 1)  
+  }else {
+    // 如果是正常的页面请求
+    fetchPostList(index)
   }
 }
 
@@ -93,7 +97,7 @@ onMounted(() => {
         </div>
 
         <!-- 分页 -->
-        <Pagination :paginationData="paginationData" />
+        <Pagination :paginationData="paginationData" @pagination-click="paginationClick" />
       </div>
     </div>
   </div>

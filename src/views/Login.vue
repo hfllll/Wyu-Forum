@@ -1,23 +1,57 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+
+import type { LoginParams, AlertInstance } from '@/types';
+import { goLogin } from '@/api';
+import { reactive, ref } from 'vue';
+import Alert from '@/components/Base/Alert.vue'
 import router from '@/routers';
-type FormData = {
-    phone: string;
-    password: string;
-    remember: boolean
+
+
+const alertRef = ref<AlertInstance | null>(null)
+
+interface alertData{
+    title: string
+    type?: 'error' | 'info' | 'success' | 'warning'
 }
-const formData = reactive<FormData>({
+
+const alert = reactive<alertData>({
+    title: '',
+    type: 'info'
+})
+
+const formData = reactive<LoginParams>({
   phone: '',
-  password: '',
-  remember: false
+  password: ''
 });
-const login = () => {
-  console.log(formData);
-    router.push('/')
+const login = async () => {
+    // console.log('alertRef.value', alertRef.value);
+        
+    alertRef.value?.show()
+    try{
+        const res = await goLogin(formData)
+        console.log('res',res);
+        
+        // if (res.code === 200){
+
+        // }
+        
+    }catch(err) {
+        console.log('err', err);
+        if (err instanceof Error){
+            alert.type = 'error'
+            alert.title = err.message
+            alertRef.value?.show()
+        }else {
+            alert.type = 'error'
+            alert.title = '未知错误'
+            alertRef.value?.show()
+        }
+    }
 };
 </script>
 
 <template>
+    <Alert :title="alert.title" :type="alert.type" ref="alertRef" />
     <div class="hero bg-base-200 min-h-[80vh]">
         <div class="hero-content flex-col lg:flex-row-reverse">
             <div class="text-center lg:text-left">
