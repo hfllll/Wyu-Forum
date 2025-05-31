@@ -7,7 +7,7 @@ export function setupInterceptors(instance: AxiosInstance):void {
     instance.interceptors.request.use(
         (config: InternalAxiosRequestConfig) => {
             // 添加请求头
-            config.headers.Authorization = `Bearer ${123}`
+            // config.headers.Authorization = `Bearer ${123}`
             return config
         },
         (error) => {
@@ -18,39 +18,42 @@ export function setupInterceptors(instance: AxiosInstance):void {
     // 响应拦截器
     instance.interceptors.response.use(
         (response: AxiosResponse) => {
-            // 2xx范围内的状态码都会触发该函数
-            const {code, data, message} = response.data
+            const { code, data, message } = response.data;
             if (code === 200 || code === 0) {
-                return data
+                return response;
             } else {
-                // 处理业务错误
-                
-                return Promise.reject(message)
+                // 处理业务错误，抛出明确的错误对象
+                const error = new Error(message || '业务错误');
+                error.name = 'BusinessError';
+                return Promise.reject(error);
             }
         },
         (error) => {
-            // 超出 2xx 范围内的状态码都会触发该函数
             if (error.response) {
-                const { status} = error.response
-
-                // 处理不同的HTTP状态码
+                const { status } = error.response;
+                let errorMessage = '请求失败';
                 switch (status) {
                     case 401:
-                        // 未授权，跳转到登录页
-                        break
+                        errorMessage = '未授权，请登录';
+                        // 可添加跳转登录页逻辑
+                        break;
                     case 403:
-                        // 禁止访问
-                        break
+                        errorMessage = '禁止访问';
+                        break;
                     case 404:
-                        // 资源不存在
-                        break
+                        errorMessage = '资源不存在';
+                        break;
                     case 500:
-                        // 服务器错误
-                        break
+                        errorMessage = '服务器错误';
+                        break;
                     default:
-                }      
+                        errorMessage = `HTTP 错误: ${status}`;
+                }
+                const httpError = new Error(errorMessage);
+                httpError.name = 'HttpError';
+                return Promise.reject(httpError);
             }
-            return Promise.reject(error)
+            return Promise.reject(error);
         }
-    )
+    );
 }

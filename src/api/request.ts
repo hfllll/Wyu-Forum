@@ -6,7 +6,8 @@ import { setupInterceptors } from '@/api/interceptors'
 
 // 创建axios实例
 const request:AxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    // baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: 'api/forum',
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json'

@@ -1,5 +1,12 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
+import type { PostCategory, TrendingTopic } from '@/types'
+
+export interface LeftTabProps {
+  categoryList: PostCategory[],
+  topicList: TrendingTopic[]
+}
+
 type CategoryType = { 
   id: number,
   name: string,
@@ -19,7 +26,7 @@ const categories = ref<CategoryType[]>([
   { id: 6, name: '职场', count: 19 }
 ])
 
-const selectedCategory = ref(1)
+const selectedCategory = ref('1')
 
 const hotTopics = ref<HotTopicType[]>([
   { id: 1, name: '期末考试', count: 152 },
@@ -28,6 +35,9 @@ const hotTopics = ref<HotTopicType[]>([
   { id: 4, name: '考研经验', count: 27 },
   { id: 5, name: '校园活动', count: 25 }
 ])
+
+const props = defineProps<LeftTabProps>()
+
 </script>
 
 <template>
@@ -36,13 +46,13 @@ const hotTopics = ref<HotTopicType[]>([
       <div class="card-body">
         <h2 class="card-title">分类</h2>
         <ul class="menu p-0 [&_li>*]:rounded-md  flex">
-          <li v-for="category in categories" :key="category.id">
+          <li v-for="category in props.categoryList" :key="category.categoryId">
             <a 
-              :class="{ 'active': selectedCategory === category.id }"
-              @click="selectedCategory = category.id"
+              :class="{ 'active': selectedCategory === category.categoryId }"
+              @click="selectedCategory = category.categoryId"
             >
-              {{ category.name }}
-              <span class="badge badge-sm">{{ category.count }}</span>
+              {{ category.title }}
+              <span class="badge badge-sm">{{ category.num }}</span>
             </a>
           </li>
         </ul>
@@ -51,8 +61,8 @@ const hotTopics = ref<HotTopicType[]>([
         
         <h2 class="card-title">热门话题</h2>
         <div class="flex flex-wrap gap-2">
-          <div v-for="(topic, index) in hotTopics" :key="index" class="badge badge-primary">
-            {{ topic.name }}
+          <div v-for="(topic, index) in props.topicList" :key="index" class="badge badge-primary">
+            {{ topic.title }}
           </div>
         </div>
         

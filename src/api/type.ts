@@ -3,6 +3,7 @@ export interface ApiResponse<T = any> {
     code: number
     data: T
     message: string
+    errorCode: number
 }
 
 // 分页请求
@@ -13,8 +14,9 @@ export interface PaginationParams {
 
 // 分页响应
 export interface PaginationResponse<T = any> {
-    list: T[],
+    records: T[]
     total: number
-    pageNum: number
-    pageSize: number
+    pages: number
+    size: number
+    current: number 
 }

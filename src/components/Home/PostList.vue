@@ -1,85 +1,18 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
-type Post = {
-    id: number,
-    title: string,
-    author: string,
-    avatar: string,
-    content: string,
-    tags: string[],
-    likes: number,
-    comments: number,
-    createdAt: string,
-    isLiked?: boolean
+import { ref, defineProps, computed } from 'vue';
+import type { Post } from '@/types';
+
+// 帖子列表的prop参数
+export interface PostListProps {
+    postList: Post[]
 }
 
-const posts = ref<Post[]>([
-    {
-        id: 1,
-        title: '如何提高编程效率？',
-        author: '编程达人',
-        avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-        content: '分享一些提高编程效率的小技巧和工具推荐...',
-        tags: ['编程', '效率', '工具'],
-        likes: 42,
-        comments: 15,
-        createdAt: '2小时前',
-        isLiked: false
-    },
-    {
-        id: 2,
-        title: 'Vue 3 和 React 的对比分析',
-        author: '前端专家',
-        avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-        content: '本文将深入分析Vue 3和React两大前端框架的优缺点...',
-        tags: ['Vue', 'React', '前端'],
-        likes: 78,
-        comments: 23,
-        createdAt: '3小时前',
-        isLiked: false
-    },
-    {
-        id: 3,
-        title: '大学生如何规划学习路线？',
-        author: '学习规划师',
-        avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-        content: '针对大学生如何规划自己的学习路线，提供一些实用建议...',
-        tags: ['学习', '规划', '大学生'],
-        likes: 56,
-        comments: 18,
-        createdAt: '5小时前',
-        isLiked: false
-    },
-    {
-        id: 4,
-        title: '校园社团活动组织经验分享',
-        author: '社团达人',
-        avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-        content: '分享在校园中组织社团活动的经验和技巧...',
-        tags: ['社团', '活动', '组织'],
-        likes: 35,
-        comments: 12,
-        createdAt: '昨天',
-        isLiked: false
-    },
-    {
-        id: 5,
-        title: '实习经验分享：我在科技公司的一个月',
-        author: '实习生',
-        avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-        content: '分享在某科技公司实习的经历和收获...',
-        tags: ['实习', '经验', '职场'],
-        likes: 64,
-        comments: 20,
-        createdAt: '2天前',
-        isLiked: false
-    }
-])
+const props = defineProps<PostListProps>()
 
 </script>
 
 <template>
-    <div v-for="post in posts" :key="post.id" class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
+    <div v-for="post in props.postList" :key="post.id" class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
         <div class="card-body">
             <div class="flex items-start justify-between">
                 <div class="flex items-start space-x-4">
@@ -91,7 +24,7 @@ const posts = ref<Post[]>([
                     <div>
                         <h2 class="card-title hover:text-primary cursor-pointer">{{ post.title }}</h2>
                         <div class="flex items-center text-sm text-base-content/70 mt-1">
-                            <span>{{ post.author }}</span>
+                            <span>{{ post.authorName }}</span>
                             <span class="mx-2">•</span>
                             <span>{{ post.createdAt }}</span>
                         </div>
@@ -121,8 +54,13 @@ const posts = ref<Post[]>([
 
             <div class="card-actions justify-end mt-4">
                 <button class="btn btn-ghost btn-sm gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    <svg v-show="!post?.isLiked" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                    </svg>
+                    <svg v-show="post?.isLiked" xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="red" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                     </svg>

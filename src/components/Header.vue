@@ -38,7 +38,7 @@
                 </div>
                 <ul tabindex="0"
                     class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a>个人资料</a></li>
+                    <li class="animate__animated animate__wobble"><a>个人资料</a></li>
                     <li><a>设置</a></li>
                     <li><a>退出</a></li>
                 </ul>
