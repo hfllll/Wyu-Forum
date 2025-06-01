@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+import router from '@/routers';
+import { useUserStore } from '@/stores';
+const userStore = useUserStore()
+const handleLogout = () => {
+    userStore.logout()
+    router.push('/login')
+}
+</script>
+
 <template>
     <!-- 顶部导航栏 -->
     <div class="navbar bg-base-100 shadow-lg">
@@ -31,16 +41,20 @@
                 <input type="text" placeholder="搜索" class="input input-bordered w-24 md:w-auto" />
             </div>
             <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                    <div class="w-10 rounded-full">
-                        <img alt="用户头像" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar avatar-placeholder">
+                    <div v-if="userStore.isLoggedIn" class="w-10 rounded-full text-center">
+                        <img alt="用户头像"  :src='userStore.userInfo?.avatar' />
+                    </div>
+                    <div v-else class="bg-neutral text-neutral-content w-24 rounded-full">
+                        <span class="text-3xl">D</span>
                     </div>
                 </div>
+                
                 <ul tabindex="0"
                     class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                     <li class="animate__animated animate__wobble"><a>个人资料</a></li>
                     <li><a>设置</a></li>
-                    <li><a>退出</a></li>
+                    <li @click="handleLogout"><a>退出</a></li>
                 </ul>
             </div>
         </div>

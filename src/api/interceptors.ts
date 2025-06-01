@@ -1,13 +1,14 @@
 // 请求和响应拦截器
 import type { AxiosInstance,  AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-
+import { useUserStore } from '@/stores'
+const userStore = useUserStore()
 
 export function setupInterceptors(instance: AxiosInstance):void {
     // 请求拦截器
     instance.interceptors.request.use(
         (config: InternalAxiosRequestConfig) => {
             // 添加请求头
-            // config.headers.Authorization = `Bearer ${123}`
+            config.headers.Authorization = `Bearer ${userStore.userInfo?.token}`
             return config
         },
         (error) => {

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onActivated,  nextTick ,reactive, ref } from 'vue'
 import LeftTabs from '@/components/Home/LeftTabs.vue';
 import FilterBox from '@/components/Home/FilterBox.vue';
 import PostList from '@/components/Home/PostList.vue';
 import Pagination from '@/components/Home/Pagination.vue';
+import BackTop from '@/components/Base/BackTop.vue';
 import { getPostCategory, getPostList, getTrendingTopic } from '@/api';
 import type { Post, PostCategory, TrendingTopic, PaginationData } from '@/types';
 
@@ -17,7 +18,6 @@ const paginationData = reactive<PaginationData>({
   size: 10,
   current: 1
 })
-
 
 const fetchPostList = async (num:number = 1, pageSize: number = 10) => {
   try{
@@ -56,25 +56,28 @@ const fetchTopic = async () => {
   }
 }
 
-const paginationClick = (index: number) => {
-  console.log('index', index);
-  
-  if (index === -1){
-    if (paginationData.current <= 1) return
-    fetchPostList(paginationData.current - 1)  
-  }else if(index === 9999){
-    if (paginationData.current >= paginationData.pages) return
-    fetchPostList(paginationData.current + 1)  
-  }else {
-    // 如果是正常的页面请求
-    fetchPostList(index)
+const paginationClick = async (index: number) => {
+  let targetPage = index;
+  if (index === -1) {
+    if (paginationData.current <= 1) return;
+    targetPage = paginationData.current - 1;
+  } else if (index === 9999) {
+    if (paginationData.current >= paginationData.pages) return;
+    targetPage = paginationData.current + 1;
   }
-}
 
-onMounted(() => {
-  fetchPostList()
-  fetchCategory()
-  fetchTopic()
+  // 获取数据
+  await fetchPostList(targetPage);
+  // 等待 DOM 更新
+  await nextTick();
+  // 检查页面是否可滚动
+  if (document.documentElement.scrollHeight > window.innerHeight + 50) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
+
+onActivated(async () => {
+  await Promise.all([fetchPostList(), fetchCategory(), fetchTopic()]);
 })
 
 </script>
@@ -99,6 +102,8 @@ onMounted(() => {
         <!-- 分页 -->
         <Pagination :paginationData="paginationData" @pagination-click="paginationClick" />
       </div>
+
+      <BackTop />
     </div>
   </div>
 </template>

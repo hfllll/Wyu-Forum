@@ -1,58 +1,47 @@
 <script setup lang="ts">
 
-import type { LoginParams, AlertInstance } from '@/types';
+import type { LoginParams, AlertInstance, AlertData } from '@/types';
 import { goLogin } from '@/api';
 import { reactive, ref } from 'vue';
 import Alert from '@/components/Base/Alert.vue'
 import router from '@/routers';
+import { useUserStore } from '@/stores';
 
-
+const userStore = useUserStore()
 const alertRef = ref<AlertInstance | null>(null)
-
-interface alertData{
-    title: string
-    type?: 'error' | 'info' | 'success' | 'warning'
-}
-
-const alert = reactive<alertData>({
-    title: '',
-    type: 'info'
-})
-
 const formData = reactive<LoginParams>({
   phone: '',
   password: ''
 });
+const logining = ref<boolean>(false)
+
 const login = async () => {
-    // console.log('alertRef.value', alertRef.value);
-        
-    alertRef.value?.show()
+    logining.value = true
     try{
         const res = await goLogin(formData)
-        console.log('res',res);
-        
-        // if (res.code === 200){
-
-        // }
-        
+        if (res.code === 200) {
+            alertRef.value?.show({ title: res.message || '恭喜你 登陆成功！即将前往主页', type: 'success' })
+            userStore.setUserInfo(res.data)
+            setTimeout(() => {
+                router.push('/')
+                logining.value = false
+            }, 1200)
+        }
     }catch(err) {
-        console.log('err', err);
+        logining.value = false
         if (err instanceof Error){
-            alert.type = 'error'
-            alert.title = err.message
-            alertRef.value?.show()
-        }else {
-            alert.type = 'error'
-            alert.title = '未知错误'
-            alertRef.value?.show()
+            // alertRef.value?.show({ title: err.message, type: 'error' })
+            alertRef.value?.show({ title: err.message, type: 'error' })
+        } else {
+            alertRef.value?.show({ title: '未知错误', type: 'error' })
         }
     }
 };
 </script>
 
 <template>
-    <Alert :title="alert.title" :type="alert.type" ref="alertRef" />
     <div class="hero bg-base-200 min-h-[80vh]">
+        <Alert ref="alertRef" />
         <div class="hero-content flex-col lg:flex-row-reverse">
             <div class="text-center lg:text-left">
                 <h1 class="text-5xl font-bold">WYU Forum</h1>
@@ -76,11 +65,11 @@ const login = async () => {
                                 </g>
                             </svg>
                             <input 
-                            v-model="formData.phone" type="tel" class="tabular-nums" required placeholder="Phone"
-                                pattern="[0-9]*" minlength="11" maxlength="11" title="请输入11位数字">
+                            v-model="formData.phone" type="text" class="tabular-nums" required placeholder="Phone"
+                                pattern="admin" minlength="5" maxlength="5" title="管理员账号">
                         </label>
                         <p class="validator-hint hidden">
-                            请输入有效的手机号
+                            请输入管理员账号admin
                         </p>
                         <label class="label">Password</label>
                         <label class="input validator">
@@ -92,8 +81,8 @@ const login = async () => {
                                     <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
                                 </g>
                             </svg>
-                            <input v-model="formData.password" type="password" required placeholder="Password"
-                                minlength="4" title="请输入测试密码66666">
+                            <input v-model="formData.password" type="password" pattern="1234" required placeholder="Password"
+                                minlength="4" title="测试密码1234">
                         </label>
                         <p class="validator-hint hidden">
                             请输入测试密码1234
@@ -102,7 +91,7 @@ const login = async () => {
                             <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
                                 <label class="label">
                                     <label class="toggle text-base-content">
-                                <input type="checkbox" v-model="formData.remember" />
+                                <input type="checkbox"  />
                                 <svg aria-label="enabled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <g
                                     stroke-linejoin="round"
@@ -134,7 +123,7 @@ const login = async () => {
                             <a class="link link-hover">忘记密码</a>
                         
                         </div>
-                        <button class="btn btn-neutral mt-4" @click="login">Login</button>
+                        <button class="btn btn-neutral mt-4 " :disabled="logining" @click="login"> Login <span v-show="logining" class="loading loading-infinity loading-lg"></span></button>
                     </fieldset>
                 </div>
             </div>
