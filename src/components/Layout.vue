@@ -9,7 +9,7 @@ import Footer from '@/components/Footer.vue'
         <Header />
         
         <!-- 内容区域 -->
-        <div class="container mx-auto p-4">
+        <div class="container mx-auto p-4 mb-10">
             <router-view v-slot="{ Component }">
                 <transition 
                     appear 

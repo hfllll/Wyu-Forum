@@ -1,6 +1,7 @@
 // 请求和响应拦截器
 import type { AxiosInstance,  AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { useUserStore } from '@/stores'
+import router from '@/routers'
 const userStore = useUserStore()
 
 export function setupInterceptors(instance: AxiosInstance):void {
@@ -37,6 +38,7 @@ export function setupInterceptors(instance: AxiosInstance):void {
                     case 401:
                         errorMessage = '未授权，请登录';
                         // 可添加跳转登录页逻辑
+                        router.push('/login')
                         break;
                     case 403:
                         errorMessage = '禁止访问';

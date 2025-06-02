@@ -1,6 +1,6 @@
 import { http } from '@/api/request'
 
-import type { Post, PostsParams, PostCategory, TrendingTopic } from '@/types/post'
+import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, FatherComment, FollowAuthor } from '@/types'
 import type { ApiResponse,  PaginationResponse,  } from '@/api/type'
 
 // 获取帖子列表
@@ -18,4 +18,27 @@ export function getTrendingTopic(){
     return http.get<ApiResponse<TrendingTopic[]>>('/forum/post/topic/list')
 }
 
-// 点赞函数姐
+// 点赞
+export function Like( data: LikeParams ) {
+    return http.post<ApiResponse>('/user/like', data )
+}
+
+// 获取帖子详情
+export function getPostDetail( params: PostDetailParams ) {
+    return http.get<ApiResponse<PostDetail>>('', { params })
+}
+
+// 获取评论列表
+export function getComment( params: CommentParams ) {
+    return http.get<ApiResponse<FatherComment[]>>('', { params })
+}
+
+// 关注帖子编者的接口
+export function followAuthor( data: FollowAuthor ){
+    return http.post<ApiResponse>('', data)
+}
+
+// 评论帖子的接口
+export function Comment(data: CommentParams) {
+    return http.post<ApiResponse>('', data)
+}
