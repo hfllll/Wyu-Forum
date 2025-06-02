@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { getPostDetail } from '@/api'
+import type { PostDetail, PostData, RelatedPosts, FatherComment, Author } from '@/types'
+import { onActivated, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const postId = route.params.id
+const postId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
 
 // 模拟帖子数据
-const post = ref({
+const post = ref<PostData>({
   id: postId,
   title: '如何提高编程效率？',
   author: '编程达人',
@@ -28,29 +30,34 @@ const post = ref({
   likes: 42,
   comments: 15,
   views: 256,
-  createdAt: '2024-05-01 14:30'
+  createdAt: '2024-05-01 14:30',
+  isCollected: false,
 })
 
 // 模拟评论数据
-const comments = ref([
+const comments = ref<FatherComment[]>([
   {
-    id: 1,
+    id: '1',
     author: '代码爱好者',
     avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
     content: '非常实用的建议，我特别认同第4点，适当休息真的很重要！',
     likes: 8,
-    createdAt: '2024-05-01 15:45'
+    createdAt: '2024-05-01 15:45',
+    replies: [],
+    userId: '132'
   },
   {
-    id: 2,
+    id: '2',
     author: '新手程序员',
     avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
     content: '请问有什么推荐的IDE插件可以提高效率吗？',
     likes: 3,
     createdAt: '2024-05-01 16:20',
+    userId: '123',
     replies: [
       {
-        id: 21,
+        id: '21',
+        userId: 'string',
         author: '编程达人',
         avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
         content: '对于VS Code，我推荐Prettier（代码格式化）、GitLens（Git增强）和Bracket Pair Colorizer（括号着色）等插件。',
@@ -60,36 +67,57 @@ const comments = ref([
     ]
   },
   {
-    id: 3,
+    id: '3',
+    userId: '123',
     author: '资深开发',
     avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
     content: '我还想补充一点，定期重构代码也很重要，可以提高代码质量和可维护性。',
     likes: 12,
-    createdAt: '2024-05-01 17:10'
+    createdAt: '2024-05-01 17:10',
+    replies: []
   }
 ])
+
+// 关联的帖子
+const relatedPostList = ref<RelatedPosts[]>([
+  { postId: '101', title: '10个提高代码质量的技巧' },
+  { postId: '102', title: '程序员必备的5个工具' },
+  { postId: '103', title: '如何避免编程中的常见错误' }
+])
+
+// 作者信息
+const author = ref<Author | null>(null)
 
 const newComment = ref('')
 
 const submitComment = () => {
   if (newComment.value.trim()) {
     comments.value.push({
-      id: comments.value.length + 1,
+      id: (comments.value.length + 1).toString(),
+      userId: '345',
       author: '当前用户',
       avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
       content: newComment.value,
       likes: 0,
-      createdAt: '刚刚'
+      createdAt: '刚刚',
+      replies: []
     })
     newComment.value = ''
   }
 }
 
-const relatedPosts = ref([
-  { id: 101, title: '10个提高代码质量的技巧' },
-  { id: 102, title: '程序员必备的5个工具' },
-  { id: 103, title: '如何避免编程中的常见错误' }
-])
+const fetchDetail = async () => {
+  const { data: { postData, authorData, relatedPosts } } = await getPostDetail({
+    postId: postId
+  })
+  post.value = postData
+  author.value = authorData
+  relatedPostList.value = relatedPosts
+}
+
+onActivated(async () => {
+  await Promise.all([fetchDetail()])
+})
 </script>
 
 <template>
@@ -275,22 +303,22 @@ const relatedPosts = ref([
           <div class="card-body items-center text-center">
             <div class="avatar">
               <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                <img :src="post.avatar" alt="用户头像" />
+                <img :src="author?.avatar" alt="用户头像" />
               </div>
             </div>
-            <h2 class="card-title mt-2">{{ post.author }}</h2>
+            <h2 class="card-title mt-2">{{ author?.author }}</h2>
             <p class="text-sm text-base-content/60">活跃会员</p>
             <div class="flex gap-4 mt-2">
               <div class="text-center">
-                <div class="font-bold">152</div>
+                <div class="font-bold">{{ author?.postNum }}</div>
                 <div class="text-xs text-base-content/60">帖子</div>
               </div>
               <div class="text-center">
-                <div class="font-bold">563</div>
+                <div class="font-bold">{{ author?.likeNum }}</div>
                 <div class="text-xs text-base-content/60">获赞</div>
               </div>
               <div class="text-center">
-                <div class="font-bold">28</div>
+                <div class="font-bold">{{ author?.fansNUm }}</div>
                 <div class="text-xs text-base-content/60">粉丝</div>
               </div>
             </div>
@@ -306,7 +334,7 @@ const relatedPosts = ref([
           <div class="card-body">
             <h2 class="card-title">相关帖子</h2>
             <ul class="menu p-0">
-              <li v-for="relatedPost in relatedPosts" :key="relatedPost.id">
+              <li v-for="relatedPost in relatedPostList" :key="relatedPost.postId">
                 <a class="text-primary">{{ relatedPost.title }}</a>
               </li>
             </ul>

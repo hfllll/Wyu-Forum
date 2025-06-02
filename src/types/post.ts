@@ -62,17 +62,24 @@ export interface PostDetailParams {
 
 // 详情帖子数据 包括请求响应
 export interface PostDetail {
+    postData: PostData
+    authorData: Author // 作者信息
+    relatedPosts: RelatedPosts[] // 相关帖子
+}
+
+// 帖子内容
+export interface PostData {
     id: string, // 帖子ID
     title: string,
     content: string, // 内容 后续可能升级富文本
     tags: string[], // 标签
     likes: number, // 点赞数量
-    isCollected: boolean // 是否收藏
+    isCollected?: boolean // 是否收藏
     views: number, // 观看数量
-    createdAt: number // 发帖时间
+    createdAt: string // 发帖时间
     comments: number // 帖子数量
-    authorData: Author // 作者信息
-    relatedPosts: RelatedPosts[] // 相关帖子
+    author: string
+    avatar: string
 }
 
 // 帖子详情的推荐帖子数据
@@ -104,7 +111,7 @@ export interface SonComment {
 
 // 父评论
 export interface FatherComment extends SonComment {
-    commentList: SonComment[] // 子评论列表
+    replies: SonComment[] // 子评论列表
 }
 
 // 帖子详情页关注作者的接口
