@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type { LoginParams, AlertInstance, AlertData } from '@/types';
+import type { LoginParams, AlertInstance } from '@/types';
 import { goLogin } from '@/api';
 import { reactive, ref } from 'vue';
 import Alert from '@/components/Base/Alert.vue'

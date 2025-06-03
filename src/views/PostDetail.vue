@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getPostDetail } from '@/api'
-import type { PostData, RelatedPosts, FatherComment, Author } from '@/types'
+import type { PostData, RelatedPosts, SonComment, Author } from '@/types'
 import { onActivated, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PostContent from '@/components/Post/PostContent.vue'
@@ -41,7 +41,7 @@ const post = ref<PostData>({
 
 
 // 模拟评论数据
-const comments = ref<FatherComment[]>([
+const comments = ref<SonComment[]>([
   {
     id: '1',
     author: '代码爱好者',
@@ -68,7 +68,8 @@ const comments = ref<FatherComment[]>([
         avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
         content: '对于VS Code，我推荐Prettier（代码格式化）、GitLens（Git增强）和Bracket Pair Colorizer（括号着色）等插件。',
         likes: 5,
-        createdAt: '2024-05-01 16:35'
+        createdAt: '2024-05-01 16:35',
+        replies: []
       }
     ]
   },

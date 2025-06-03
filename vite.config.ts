@@ -10,7 +10,7 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://192.168.31.230:8880',
+        target: 'http://192.168.31.230:8880', // 以/api开头的请求都会被代理到这里 并且在代理时会将/api的前缀移除
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       }

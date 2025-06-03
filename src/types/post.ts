@@ -1,6 +1,5 @@
 import type { PaginationParams } from '@/api/type'
 
-
 // 定义单个帖子相关类型
 export interface Post {
     id: string,
@@ -108,13 +107,14 @@ export interface SonComment {
     avatar: string, // 头像
     content: string,
     likes: number,
-    createdAt: string
+    createdAt: string,
+    replies: SonComment[]
 }
 
 // 父评论
-export interface FatherComment extends SonComment {
-    replies: SonComment[] // 子评论列表
-}
+// export interface FatherComment extends SonComment {
+//     replies: SonComment[] // 子评论列表
+// }
 
 // 帖子详情页关注作者的接口
 export interface FollowAuthor {
@@ -131,6 +131,11 @@ export interface CommentParams {
 
 // 收藏帖子的接口
 export interface CollectParams {
-    postID: string
+    postId: string
     toCollect: boolean
+}
+
+// 获取评论的接口
+export interface CommentGetParams extends PaginationData {
+    postID: string
 }

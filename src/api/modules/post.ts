@@ -1,6 +1,6 @@
 import { http } from '@/api/request'
 
-import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, FatherComment, FollowAuthor, CollectParams } from '@/types'
+import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, SonComment, FollowAuthor, CollectParams, CommentGetParams } from '@/types'
 import type { ApiResponse,  PaginationResponse,  } from '@/api/type'
 
 // 获取帖子列表
@@ -25,12 +25,12 @@ export function Like( data: LikeParams ) {
 
 // 获取帖子详情
 export function getPostDetail( params: PostDetailParams ) {
-    return http.get<ApiResponse<PostDetail>>('', { params })
+    return http.get<ApiResponse<PostDetail>>('/forum/post/detail', { params })
 }
 
 // 获取评论列表
 export function getComment( params: CommentParams ) {
-    return http.get<ApiResponse<FatherComment[]>>('', { params })
+    return http.get<ApiResponse<SonComment[]>>('', { params })
 }
 
 // 关注帖子编者的接口
@@ -39,11 +39,16 @@ export function followAuthor( data: FollowAuthor ){
 }
 
 // 评论帖子的接口
-export function Comment(data: CommentParams) {
+export function SetComment(data: CommentParams) {
     return http.post<ApiResponse>('', data)
 }
 
 // 收藏帖子的接口
-export function Collect(params: CollectParams) {
-    return http.post<ApiResponse>('', { params })
+export function Collect(data: CollectParams) {
+    return http.post<ApiResponse>('/user/collect', data)
+}
+
+// 获取评论接口
+export function GetComments(params: CommentGetParams) {
+    return http.get<ApiResponse<PaginationResponse<SonComment>>>('', { params })
 }
