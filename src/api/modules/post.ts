@@ -1,6 +1,6 @@
 import { http } from '@/api/request'
 
-import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, FatherComment, FollowAuthor } from '@/types'
+import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, FatherComment, FollowAuthor, CollectParams } from '@/types'
 import type { ApiResponse,  PaginationResponse,  } from '@/api/type'
 
 // 获取帖子列表
@@ -41,4 +41,9 @@ export function followAuthor( data: FollowAuthor ){
 // 评论帖子的接口
 export function Comment(data: CommentParams) {
     return http.post<ApiResponse>('', data)
+}
+
+// 收藏帖子的接口
+export function Collect(params: CollectParams) {
+    return http.post<ApiResponse>('', { params })
 }

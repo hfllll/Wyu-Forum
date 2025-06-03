@@ -80,6 +80,7 @@ export interface PostData {
     comments: number // 帖子数量
     author: string
     avatar: string
+    authorID: string
 }
 
 // 帖子详情的推荐帖子数据
@@ -95,7 +96,8 @@ export interface Author {
     postNum: number // 帖子数量
     likeNum: number // 获赞数量
     fansNUm: number // 粉丝数量
-    isFollowrd?: boolean // 作者是否被我关注了 如果是查看本人的帖子 该值不返回
+    authorID: string
+    isFollowd?: boolean // 作者是否被我关注了 如果是查看本人的帖子 该值不返回
 }
 
 // 子评论
@@ -125,4 +127,10 @@ export interface CommentParams {
     parentId?: string // 只有二级评论才要传
     commentContent: string
     postId: string
+}
+
+// 收藏帖子的接口
+export interface CollectParams {
+    postID: string
+    toCollect: boolean
 }
