@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { getPostDetail } from '@/api'
-import type { PostData, RelatedPosts, SonComment, Author } from '@/types'
+import { GetComments,  getPostDetail, SetComment } from '@/api'
+import type { PostData, RelatedPosts,  Author, FatherComment } from '@/types'
 import { onActivated, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useUserStore } from '@/stores'
 import PostContent from '@/components/Post/PostContent.vue'
 import AuthorContent from '@/components/Post/AuthorContent.vue'
 import RelatedPostList from '@/components/Post/RelatedPostList.vue'
+import CommentList from '@/components/Post/CommentList.vue'
+import BackTop from '@/components/Base/BackTop.vue'
+import { v4 as uuidv4 } from 'uuid'
+import Swal from 'sweetalert2'
 
+const userStore = useUserStore()
 const route = useRoute()
 const postId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
 
+const isComment = ref<boolean>(false)
 
 // 模拟帖子数据
 const post = ref<PostData>({
@@ -41,15 +48,16 @@ const post = ref<PostData>({
 
 
 // 模拟评论数据
-const comments = ref<SonComment[]>([
+const comments = ref<FatherComment[]>([
   {
     id: '1',
     author: '代码爱好者',
     avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
     content: '非常实用的建议，我特别认同第4点，适当休息真的很重要！',
     likes: 8,
-    createdAt: '2024-05-01 15:45',
-    replies: [],
+    createTime: '2024-05-01 15:45',
+    commentCounts: 1,
+    commentList: [],
     userId: '132'
   },
   {
@@ -58,9 +66,10 @@ const comments = ref<SonComment[]>([
     avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
     content: '请问有什么推荐的IDE插件可以提高效率吗？',
     likes: 3,
-    createdAt: '2024-05-01 16:20',
+    createTime: '2024-05-01 16:20',
     userId: '123',
-    replies: [
+    commentCounts: 4,
+    commentList: [
       {
         id: '21',
         userId: 'string',
@@ -68,8 +77,9 @@ const comments = ref<SonComment[]>([
         avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
         content: '对于VS Code，我推荐Prettier（代码格式化）、GitLens（Git增强）和Bracket Pair Colorizer（括号着色）等插件。',
         likes: 5,
-        createdAt: '2024-05-01 16:35',
-        replies: []
+        createTime: '2024-05-01 16:35',
+        count: null,
+        commentCounts: 9
       }
     ]
   },
@@ -80,8 +90,21 @@ const comments = ref<SonComment[]>([
     avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
     content: '我还想补充一点，定期重构代码也很重要，可以提高代码质量和可维护性。',
     likes: 12,
-    createdAt: '2024-05-01 17:10',
-    replies: []
+    createTime: '2024-05-01 17:10',
+    commentCounts: 3,
+    commentList: [
+      {
+        id: '21',
+        userId: 'string',
+        author: '编程达人',
+        avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
+        content: '对于VS Code，我推荐Prettier（代码格式化）、GitLens（Git增强）和Bracket Pair Colorizer（括号着色）等插件。',
+        likes: 5,
+        createTime: '2024-05-01 16:35',
+        count: null,
+        commentCounts: 9
+      }
+    ]
   }
 ])
 
@@ -92,24 +115,41 @@ const relatedPostList = ref<RelatedPosts[]>([
   { postId: '103', title: '如何避免编程中的常见错误' }
 ])
 
+
+
 // 作者信息
 const author = ref<Author | null>(null)
 
 const newComment = ref('')
 
-const submitComment = () => {
+const submitComment = async () => {
   if (newComment.value.trim()) {
-    comments.value.push({
-      id: (comments.value.length + 1).toString(),
-      userId: '345',
+    isComment.value = true
+    await SetComment({
+      parentId: postId, // 如果一级评论为postId 二级为父Id
+      commentContent: '程嘉名没鸡鸡',
+      postId: postId,
+      level: 1 
+    })
+    comments.value.unshift({
+      id: uuidv4(),
+      userId: uuidv4(),
       author: '当前用户',
-      avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
+      avatar: userStore.$state.userInfo?.avatar as string,
       content: newComment.value,
       likes: 0,
-      createdAt: '刚刚',
-      replies: []
+      createTime: '刚刚',
+      commentCounts: 0,
+      commentList:[]
+    })
+    Swal.fire({
+      title: '发布评论成功！',
+      // text: 'Do you want to continue',
+      icon: 'success',
+      confirmButtonText: '林被知了'
     })
     newComment.value = ''
+    isComment.value = false
   }
 }
 
@@ -122,9 +162,27 @@ const fetchDetail = async () => {
   relatedPostList.value = relatedPosts
 }
 
+// 获取初步评论
+const fetchComment = async () => {
+  const { data } = await GetComments({
+    postId: postId
+  })
+  comments.value = data
+}
+
+// // 获取更多评论
+// const fetchMoreComment = async () => {
+//    const { data } = await GetMoreComments({
+//     commentId: comments.value[0].id
+//    })
+// }
+
 onActivated(async () => {
-  await Promise.all([fetchDetail()])
+  newComment.value = ''
+  isComment.value = false
+  await Promise.all([fetchDetail(), fetchComment()])
 })
+
 </script>
 
 <template>
@@ -145,7 +203,7 @@ onActivated(async () => {
               <div class="flex items-start gap-2">
                 <div class="avatar">
                   <div class="w-10 h-10 rounded-full">
-                    <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="用户头像" />
+                    <img :src="userStore.$state.userInfo?.avatar" alt="用户头像" />
                   </div>
                 </div>
                 <div class="flex-1">
@@ -156,7 +214,8 @@ onActivated(async () => {
                     rows="3"
                   ></textarea>
                   <div class="flex justify-end mt-2">
-                    <button @click="submitComment" class="btn btn-primary">发表评论</button>
+                    <button v-show="!isComment" @click="submitComment" class="btn btn-primary" >发表评论</button>
+                    <button v-show="isComment" class="btn btn-secondary" ><span class="loading loading-spinner" />发布中</button>
                   </div>
                 </div>
               </div>
@@ -164,72 +223,7 @@ onActivated(async () => {
             
             <div class="divider"></div>
             
-            <!-- 评论列表 -->
-            <div class="space-y-6 mt-4">
-              <div v-for="comment in comments" :key="comment.id" class="border-b border-base-300 pb-4">
-                <div class="flex items-start gap-3">
-                  <div class="avatar">
-                    <div class="w-10 h-10 rounded-full">
-                      <img :src="comment.avatar" alt="用户头像" />
-                    </div>
-                  </div>
-                  <div class="flex-1">
-                    <div class="flex justify-between">
-                      <div>
-                        <span class="font-medium">{{ comment.author }}</span>
-                        <span class="text-sm text-base-content/60 ml-2">{{ comment.createdAt }}</span>
-                      </div>
-                      <button class="btn btn-ghost btn-xs btn-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                        </svg>
-                      </button>
-                    </div>
-                    <p class="mt-1">{{ comment.content }}</p>
-                    <div class="flex items-center mt-2 space-x-4">
-                      <button class="btn btn-ghost btn-xs gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                        </svg>
-                        {{ comment.likes }}
-                      </button>
-                      <button class="btn btn-ghost btn-xs">回复</button>
-                    </div>
-                    
-                    <!-- 回复列表 -->
-                    <div v-if="comment.replies" class="mt-4 pl-4 border-l-2 border-base-300">
-                      <div v-for="reply in comment.replies" :key="reply.id" class="mt-3">
-                        <div class="flex items-start gap-3">
-                          <div class="avatar">
-                            <div class="w-8 h-8 rounded-full">
-                              <img :src="reply.avatar" alt="用户头像" />
-                            </div>
-                          </div>
-                          <div class="flex-1">
-                            <div class="flex justify-between">
-                              <div>
-                                <span class="font-medium">{{ reply.author }}</span>
-                                <span class="text-sm text-base-content/60 ml-2">{{ reply.createdAt }}</span>
-                              </div>
-                            </div>
-                            <p class="mt-1">{{ reply.content }}</p>
-                            <div class="flex items-center mt-2 space-x-4">
-                              <button class="btn btn-ghost btn-xs gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                                </svg>
-                                {{ reply.likes }}
-                              </button>
-                              <button class="btn btn-ghost btn-xs">回复</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CommentList :commentsList="comments" :postId="postId" />
           </div>
         </div>
       </div>
@@ -243,5 +237,7 @@ onActivated(async () => {
         <RelatedPostList :related-post-list="relatedPostList" />
       </div>
     </div>
+
+    <BackTop />
   </div>
 </template> 

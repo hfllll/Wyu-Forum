@@ -101,20 +101,30 @@ export interface Author {
 
 // 子评论
 export interface SonComment {
+    id: string
+    userId: string,
+    avatar: string,
+    author: string
+    content: string
+    likes: number,
+    count: null | number,
+    commentCounts: number,
+    createTime: string
+}
+
+// 父评论
+export interface FatherComment {
     id: string, // 评论id
     userId: string  // 用户ID
     author: string,
     avatar: string, // 头像
     content: string,
     likes: number,
-    createdAt: string,
-    replies: SonComment[]
+    createTime: string,
+    commentCounts: number,
+    commentList: SonComment[]
 }
 
-// 父评论
-// export interface FatherComment extends SonComment {
-//     replies: SonComment[] // 子评论列表
-// }
 
 // 帖子详情页关注作者的接口
 export interface FollowAuthor {
@@ -124,9 +134,10 @@ export interface FollowAuthor {
 
 // 评论帖子的接口
 export interface CommentParams {
-    parentId?: string // 只有二级评论才要传
+    parentId: string // 如果一级评论为postId 二级为父Id
     commentContent: string
     postId: string
+    level: 1 | 2 //如果是一级评论传1 二级评论传2
 }
 
 // 收藏帖子的接口
@@ -136,6 +147,11 @@ export interface CollectParams {
 }
 
 // 获取评论的接口
-export interface CommentGetParams extends PaginationData {
-    postID: string
+export interface CommentGetParams {
+    postId: string
+}
+
+// 加载更多评论的接口
+export interface MoreCommentParams {
+    commentId: string // 该ID为父评论的id查出
 }

@@ -7,7 +7,7 @@ import Footer from '@/components/Footer.vue'
 <template>
     <div class="min-h-screen bg-base-200">
         <Header />
-        
+
         <!-- 内容区域 -->
         <div class="container mx-auto p-4 mb-10">
             <router-view v-slot="{ Component }">
@@ -16,7 +16,7 @@ import Footer from '@/components/Footer.vue'
                     mode="out-in"
                     name="fade" >
                     <keep-alive :max="6">
-                        <component  :is="Component" />
+                        <component :is="Component" />
                     </keep-alive>
                 </transition>
             </router-view>
@@ -46,6 +46,6 @@ import Footer from '@/components/Footer.vue'
 }
 
 .fade-enter-active , .fade-leave-active{
-    transition: all 0.5s ease;
+    transition: all 0.4s ease;
 }
 </style>

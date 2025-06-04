@@ -66,7 +66,7 @@ const login = async () => {
                             </svg>
                             <input 
                             v-model="formData.phone" type="text" class="tabular-nums" required placeholder="Phone"
-                                pattern="admin" minlength="5" maxlength="5" title="管理员账号">
+                                pattern="admin" minlength="5" maxlength="5" title="管理员账号admin">
                         </label>
                         <p class="validator-hint hidden">
                             请输入管理员账号admin

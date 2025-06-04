@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue';
-import type { Post, LikeParams } from '@/types';
+import type { Post } from '@/types';
 import { Like } from '@/api';
+import { useRouter } from 'vue-router'
 
 // 帖子列表的prop参数
 export interface PostListProps {
@@ -10,11 +11,21 @@ export interface PostListProps {
 
 const props = defineProps<PostListProps>()
 
+const router = useRouter()
+
 const handleLike = async (post: Post) => {
     let likeOrUnlike = post.isLiked ? -1 : 1
     await Like({ postId:post.id , likeOrUnlike })
     post.isLiked = !post.isLiked
     post.likes += likeOrUnlike
+}
+
+const goPost = (id:string) => {
+
+    router.push({
+        name: 'Post',
+        params: { id: id }
+    })
 }
 
 </script>
@@ -30,7 +41,7 @@ const handleLike = async (post: Post) => {
                         </div>
                     </div>
                     <div>
-                        <h2 class="card-title hover:text-primary cursor-pointer">{{ post.title }}</h2>
+                        <h2 class="card-title hover:text-primary cursor-pointer" @click="goPost(post.id)">{{ post.title }}</h2>
                         <div class="flex items-center text-sm text-base-content/70 mt-1">
                             <span>{{ post.authorName }}</span>
                             <span class="mx-2">•</span>

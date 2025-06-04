@@ -34,5 +34,5 @@ const handleScrollTop = () => {
 </script>
 
 <template>
-  <button v-show="isShow" class="btn btn-soft btn-info fixed animate__animated animate__rubberBand" :style="positionStyle" @click="handleScrollTop" >Go Top</button>
+  <button v-show="isShow" class="btn btn-soft btn-secondary fixed animate__animated animate__rubberBand" :style="positionStyle" @click="handleScrollTop" >Go Top</button>
 </template>
