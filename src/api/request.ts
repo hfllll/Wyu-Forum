@@ -5,7 +5,7 @@ import { setupInterceptors } from '@/api/interceptors'
 
 
 // 创建axios实例
-const request:AxiosInstance = axios.create({
+const request: AxiosInstance = axios.create({
     // baseURL: import.meta.env.VITE_API_BASE_URL,
     baseURL: '/api',
     timeout: 5000,
@@ -25,7 +25,7 @@ export const http = {
     post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
         return request.post(url, data, config).then(res => res.data)
     },
-    put<T = any >(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
         return request.put(url, data, config).then(res => res.data)
     },
     delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {

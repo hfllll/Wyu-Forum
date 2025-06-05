@@ -95,7 +95,7 @@ onActivated(async () => {
         <FilterBox />
 
         <!-- 帖子列表 -->
-        <div class="space-y-4">
+        <div class="space-y-4 ">
           <PostList :postList="postList" />
         </div>
 

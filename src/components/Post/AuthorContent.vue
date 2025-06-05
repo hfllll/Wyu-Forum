@@ -19,6 +19,7 @@ const handleFollow = async (author: Author | null) => {
 
 <template>
   <div class="card bg-base-100 shadow-lg mb-6">
+      <template v-if="props.author">
     <div class="card-body items-center text-center">
       <div class="avatar">
         <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -47,5 +48,36 @@ const handleFollow = async (author: Author | null) => {
         <button class="btn btn-outline btn-sm">私信</button>
       </div>
     </div>
+    </template>
+    <template v-else>
+      <div class="card-body items-center text-center">
+        <!-- 头像占位 -->
+        <div class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 bg-skeleton animate-pulse mb-4"></div>
+        <!-- 名字占位 -->
+        <div class="h-6 w-32 bg-skeleton mb-2"></div>
+        <!-- 身份描述占位 -->
+        <div class="h-4 w-24 bg-skeleton mb-4"></div>
+        <!-- 统计数字占位 -->
+        <div class="flex gap-4 mb-4">
+          <div class="text-center">
+            <div class="h-6 w-12 bg-skeleton mb-1"></div>
+            <div class="h-4 w-12 bg-skeleton"></div>
+          </div>
+          <div class="text-center">
+            <div class="h-6 w-12 bg-skeleton mb-1"></div>
+            <div class="h-4 w-12 bg-skeleton"></div>
+          </div>
+          <div class="text-center">
+            <div class="h-6 w-12 bg-skeleton mb-1"></div>
+            <div class="h-4 w-12 bg-skeleton"></div>
+          </div>
+        </div>
+        <!-- 按钮占位 -->
+        <div class="card-actions mt-4">
+          <div class="h-8 w-24 bg-skeleton"></div>
+          <div class="h-8 w-24 bg-skeleton"></div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>

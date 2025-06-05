@@ -3,6 +3,7 @@ import { defineProps } from 'vue';
 import type { Post } from '@/types';
 import { Like } from '@/api';
 import { useRouter } from 'vue-router'
+import { timeAgo } from '@/utils/timeAgo';
 
 // 帖子列表的prop参数
 export interface PostListProps {
@@ -31,9 +32,39 @@ const goPost = (id:string) => {
 </script>
 
 <template>
-    <div v-for="post in props.postList" :key="post.id" class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-        <div class="card-body">
-            <div class="flex items-start justify-between">
+    <div v-if="!props.postList.length" class="space-y-6 p-4">
+        <!-- 优化版骨架屏 -->
+        <template v-for="(index) in 3" :key="index">
+            <div class="card bg-base-100 shadow-md skeleton animate-pulse">
+                <div class="card-body">
+                    <div class="flex items-start space-x-4">
+                        <div class="avatar">
+                            <div class="w-12 h-12 rounded-full bg-base-200"></div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="h-7 bg-base-200 rounded-lg mb-3"></div>
+                            <div class="h-5 bg-base-200 rounded mb-2"></div>
+                            <div class="h-5 bg-base-200 rounded mb-4"></div>
+                            <div class="flex gap-2">
+                                <div class="h-4 w-16 bg-base-200 rounded"></div>
+                                <div class="h-4 w-12 bg-base-200 rounded"></div>
+                                <div class="h-4 w-8 bg-base-200 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 mt-6">
+                        <div class="h-5 w-16 bg-base-200 rounded"></div>
+                        <div class="h-5 w-16 bg-base-200 rounded"></div>
+                        <div class="h-5 w-16 bg-base-200 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+    <div v-else class="space-y-4">
+        <div v-for="post in props.postList" :key="post.id" class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow  ">
+            <div class="card-body ">
+            <div class="flex items-start justify-between ">
                 <div class="flex items-start space-x-4">
                     <div class="avatar">
                         <div class="w-10 h-10 rounded-full">
@@ -45,7 +76,7 @@ const goPost = (id:string) => {
                         <div class="flex items-center text-sm text-base-content/70 mt-1">
                             <span>{{ post.authorName }}</span>
                             <span class="mx-2">•</span>
-                            <span>{{ post.createdAt }}</span>
+                            <span>{{ timeAgo(post.createdAt) }}</span>
                         </div>
                     </div>
                 </div>
@@ -99,7 +130,8 @@ const goPost = (id:string) => {
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Z" />
                     </svg>
-                </button>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

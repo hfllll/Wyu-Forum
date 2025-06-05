@@ -4,6 +4,7 @@ import type { Recommendations } from '@/types';
 interface RecommendationProps {
   recommendations: Recommendations[]
 }
+
 const props = defineProps<RecommendationProps>()
 </script>
 
@@ -15,7 +16,8 @@ const props = defineProps<RecommendationProps>()
       </div>
       
       <div class="space-y-4">
-        <div v-for="item in props.recommendations" :key="item.id" class="card bg-base-100 shadow-lg">
+        <template v-if="props.recommendations.length">
+          <div v-for="item in props.recommendations" :key="item.id" class="card bg-base-100 shadow-lg">
           <div class="card-body">
             <h2 class="card-title">{{ item.title }}</h2>
             <p class="text-base-content/70">作者：{{ item.author }}</p>
@@ -39,6 +41,22 @@ const props = defineProps<RecommendationProps>()
             </div>
           </div>
         </div>
+        </template>
+        <template v-else>
+          <div class="card bg-base-100 shadow-lg animate-pulse" v-for="i in 3" :key="i">
+            <div class="card-body">
+              <div class="h-6 w-3/4 bg-skeleton mb-2"></div>
+              <div class="h-4 w-1/2 bg-skeleton mb-4"></div>
+              <div class="card-actions justify-between mt-2">
+                <div class="flex items-center gap-4">
+                  <div class="h-4 w-1/4 bg-skeleton"></div>
+                  <div class="h-4 w-1/4 bg-skeleton"></div>
+                </div>
+                <div class="h-8 w-24 bg-skeleton"></div>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
     </div>
 </template>

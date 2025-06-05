@@ -80,11 +80,12 @@ export interface PostData {
     author: string
     avatar: string
     authorID: string
+    isLike: boolean // true为点赞了 false为没点赞 登录才会有true的情况
 }
 
 // 帖子详情的推荐帖子数据
 export interface RelatedPosts {
-    postId: string
+    id: string
     title: string
 }
 

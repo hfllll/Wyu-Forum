@@ -20,3 +20,9 @@ export interface PaginationResponse<T = any> {
     size: number
     current: number 
 }
+
+// 定义防抖配置接口i
+export interface DebounceConfig {
+    wait?: number // 防抖等待的时间毫秒，默认300ms
+    requestId?: string // 魏毅请求标识，用于区分不同的请求
+}

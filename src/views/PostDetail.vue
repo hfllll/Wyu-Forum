@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { GetComments,  getPostDetail, SetComment } from '@/api'
 import type { PostData, RelatedPosts,  Author, FatherComment } from '@/types'
-import { onActivated, ref } from 'vue'
+import {  onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores'
 import PostContent from '@/components/Post/PostContent.vue'
@@ -19,101 +19,14 @@ const postId = Array.isArray(route.params.id) ? route.params.id[0] : route.param
 const isComment = ref<boolean>(false)
 
 // 模拟帖子数据
-const post = ref<PostData>({
-  id: postId,
-  title: '如何提高编程效率？',
-  author: '编程达人',
-  avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-  content: `作为一名程序员，提高编程效率是非常重要的。以下是我的一些经验分享：
-
-1. **掌握快捷键**：熟悉你的IDE或编辑器的快捷键，可以大大提高编码速度。
-
-2. **代码片段**：创建常用的代码片段，避免重复编写相同的代码。
-
-3. **使用版本控制**：Git等版本控制工具可以帮助你更好地管理代码，避免意外丢失。
-
-4. **合理休息**：适当的休息可以保持大脑清醒，反而能提高整体效率。
-
-5. **持续学习**：学习新的技术和方法，不断优化你的工作流程。
-
-希望这些建议对大家有所帮助！`,
-  tags: ['编程', '效率', '工具'],
-  likes: 42,
-  comments: 15,
-  views: 256,
-  createdAt: '2024-05-01 14:30',
-  isCollected: false,
-  authorID: '123'
-})
+const post = ref<PostData | null>(null)
 
 
 // 模拟评论数据
-const comments = ref<FatherComment[]>([
-  {
-    id: '1',
-    author: '代码爱好者',
-    avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-    content: '非常实用的建议，我特别认同第4点，适当休息真的很重要！',
-    likes: 8,
-    createTime: '2024-05-01 15:45',
-    commentCounts: 1,
-    commentList: [],
-    userId: '132'
-  },
-  {
-    id: '2',
-    author: '新手程序员',
-    avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-    content: '请问有什么推荐的IDE插件可以提高效率吗？',
-    likes: 3,
-    createTime: '2024-05-01 16:20',
-    userId: '123',
-    commentCounts: 4,
-    commentList: [
-      {
-        id: '21',
-        userId: 'string',
-        author: '编程达人',
-        avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-        content: '对于VS Code，我推荐Prettier（代码格式化）、GitLens（Git增强）和Bracket Pair Colorizer（括号着色）等插件。',
-        likes: 5,
-        createTime: '2024-05-01 16:35',
-        count: null,
-        commentCounts: 9
-      }
-    ]
-  },
-  {
-    id: '3',
-    userId: '123',
-    author: '资深开发',
-    avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-    content: '我还想补充一点，定期重构代码也很重要，可以提高代码质量和可维护性。',
-    likes: 12,
-    createTime: '2024-05-01 17:10',
-    commentCounts: 3,
-    commentList: [
-      {
-        id: '21',
-        userId: 'string',
-        author: '编程达人',
-        avatar: 'https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-        content: '对于VS Code，我推荐Prettier（代码格式化）、GitLens（Git增强）和Bracket Pair Colorizer（括号着色）等插件。',
-        likes: 5,
-        createTime: '2024-05-01 16:35',
-        count: null,
-        commentCounts: 9
-      }
-    ]
-  }
-])
+const comments = ref<FatherComment[]>([])
 
 // 关联的帖子
-const relatedPostList = ref<RelatedPosts[]>([
-  { postId: '101', title: '10个提高代码质量的技巧' },
-  { postId: '102', title: '程序员必备的5个工具' },
-  { postId: '103', title: '如何避免编程中的常见错误' }
-])
+const relatedPostList = ref<RelatedPosts[]>([])
 
 
 
@@ -153,7 +66,7 @@ const submitComment = async () => {
   }
 }
 
-const fetchDetail = async () => {
+const fetchDetail = async (postId:string) => {
   const { data: { postData, authorData, relatedPosts } } = await getPostDetail({
     postId: postId
   })
@@ -170,19 +83,12 @@ const fetchComment = async () => {
   comments.value = data
 }
 
-// // 获取更多评论
-// const fetchMoreComment = async () => {
-//    const { data } = await GetMoreComments({
-//     commentId: comments.value[0].id
-//    })
-// }
 
-onActivated(async () => {
+onMounted(async () => {
   newComment.value = ''
   isComment.value = false
-  await Promise.all([fetchDetail(), fetchComment()])
+  await Promise.all([fetchDetail(postId), fetchComment()])
 })
-
 </script>
 
 <template>
@@ -221,7 +127,7 @@ onActivated(async () => {
               </div>
             </div>
             
-            <div class="divider"></div>
+            <div class="divider" />
             
             <CommentList :commentsList="comments" :postId="postId" />
           </div>

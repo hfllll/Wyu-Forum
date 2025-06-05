@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+// 保留原有方法导入
 import type { LoginParams, AlertInstance } from '@/types';
 import { goLogin } from '@/api';
 import { reactive, ref } from 'vue';
@@ -21,7 +21,6 @@ const login = async () => {
     try{
         const res = await goLogin(formData)
         if (res.code === 200) {
-            
             Swal.fire({
                 title: '恭喜你 登陆成功！即将前往主页',
                 // text: 'Do you want to continue',
@@ -58,7 +57,7 @@ const login = async () => {
             </div>
             <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                 <div class="card-body">
-                    <h2 class="text-2xl font-bold text-center">登录</h2>
+                    <h2 class="text-2xl font-bold text-center">忘记密码</h2>
                     <fieldset class="fieldset">
                         <label class="label">Phone</label>
                         <label class="input validator">
@@ -74,37 +73,15 @@ const login = async () => {
                             </svg>
                             <input 
                             v-model="formData.phone" type="text" class="tabular-nums" required placeholder="Phone"
-                                pattern="admin" minlength="5" maxlength="12" title="管理员账号admin">
+                                pattern="admin" minlength="5" maxlength="5" title="管理员账号admin">
                         </label>
                         <p class="validator-hint hidden">
                             请输入管理员账号admin
                         </p>
-                        <label class="label">Password</label>
-                        <label class="input validator">
-                            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none"
-                                    stroke="currentColor">
-                                    <path
-                                        d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
-                                    <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
-                                </g>
-                            </svg>
-                            <input v-model="formData.password" type="password" pattern="1234" required placeholder="Password"
-                                minlength="4" title="测试密码1234">
-                        </label>
-                        <p class="validator-hint hidden">
-                            请输入测试密码1234
-                        </p>
-                        <span class="link link-hover" @click="router.push('/forgot')">忘记密码</span>
-                        <button class="btn btn-neutral mt-2 " :disabled="logining" @click="login"> Login <span v-show="logining" class="loading loading-infinity loading-lg"></span></button>
-                        <!-- 添加前往注册的链接 -->
-                        <div class="text-center mt-4">
-                            还没有账号？<span class="link link-hover" @click="router.push('/register')">前往注册</span>
-                        </div>
+                        <button class="btn btn-neutral mt-4 " :disabled="logining" @click="login"> 提交 <span v-show="logining" class="loading loading-infinity loading-lg"></span></button>
                     </fieldset>
                 </div>
             </div>
         </div>
     </div>
 </template>
-

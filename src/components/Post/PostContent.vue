@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { Collect } from '@/api';
+import { Collect, Like } from '@/api';
 import type { PostData } from '@/types';
 import { defineProps } from 'vue';
 interface ContentProps {
-  post: PostData
+  post: PostData | null
 }
 const props = defineProps<ContentProps>()
 
@@ -14,11 +14,21 @@ const handleCollect = async ( post: PostData ) => {
   })
   post.isCollected = !post.isCollected
 }
+const handleLike = async (post: PostData) => {
+  await Like({
+    postId: post.id,
+    likeOrUnlike: post.isLike ? -1 : 1
+  })
+  const num = post.isLike ? -1 : 1
+  post.isLike = !post.isLike
+  post.likes += num
+}
 </script>
 
 <template>
   <div class="card bg-base-100 shadow-lg mb-6">
   <div class="card-body">
+    <template v-if="props.post">
     <!-- 帖子标题和作者信息 -->
     <div>
       <h1 class="text-2xl font-bold mb-2">{{ props.post.title }}</h1>
@@ -32,9 +42,9 @@ const handleCollect = async ( post: PostData ) => {
           <span class="font-medium">{{ props.post.author }}</span>
           <span class="text-base-content/60">{{ props.post.createdAt }}</span>
         </div>
-        <div class="flex items-center space-x-2 text-base-content/60">
+        <div class="flex items-center space-x-2 text-base-content/60" >
           <span class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg  xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
@@ -59,8 +69,11 @@ const handleCollect = async ( post: PostData ) => {
     <!-- 操作按钮 -->
     <div class="flex justify-between mt-6">
       <div class="flex space-x-2">
-        <button class="btn btn-ghost btn-sm gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button class="btn btn-ghost btn-sm gap-1" @click="handleLike(props.post)">
+          <svg v-show="!post?.isLike" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <svg v-show="post?.isLike" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate__animated animate__bounce" fill="red" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
           {{ props.post.likes }}
@@ -88,6 +101,39 @@ const handleCollect = async ( post: PostData ) => {
         </button>
       </div>
     </div>
-  </div>
-</div>
+    </template>
+  
+    <template v-else>
+      <div class="card-body">
+        <!-- 标题占位 -->
+        <div class="h-8 w-3/4 skeleton mb-4"></div>
+        <!-- 作者信息占位 -->
+        <div class="flex items-center space-x-2 mb-2">
+          <div class="w-8 h-8 rounded-full skeleton"></div>
+          <div class="h-4 w-24 skeleton"></div>
+          <div class="h-4 w-16 skeleton"></div>
+        </div>
+        <div class="divider"></div>
+        <!-- 内容占位 -->
+        <div class="h-48 skeleton mb-4"></div>
+        <!-- 标签占位 -->
+        <div class="flex gap-2 mb-4">
+          <div class="h-6 w-24 skeleton"></div>
+          <div class="h-6 w-24 skeleton"></div>
+        </div>
+        <!-- 操作按钮占位 -->
+        <div class="flex justify-between">
+          <div class="flex space-x-2">
+            <div class="h-8 w-24 skeleton"></div>
+            <div class="h-8 w-24 skeleton"></div>
+          </div>
+          <div class="flex space-x-2">
+            <div class="h-8 w-24 skeleton"></div>
+            <div class="h-8 w-24 skeleton"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+    </div>
+    </div>
 </template>

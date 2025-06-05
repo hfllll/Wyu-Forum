@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+// 保留原有方法导入
 import type { LoginParams, AlertInstance } from '@/types';
 import { goLogin } from '@/api';
 import { reactive, ref } from 'vue';
@@ -21,7 +21,6 @@ const login = async () => {
     try{
         const res = await goLogin(formData)
         if (res.code === 200) {
-            
             Swal.fire({
                 title: '恭喜你 登陆成功！即将前往主页',
                 // text: 'Do you want to continue',
@@ -58,7 +57,7 @@ const login = async () => {
             </div>
             <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                 <div class="card-body">
-                    <h2 class="text-2xl font-bold text-center">登录</h2>
+                    <h2 class="text-2xl font-bold text-center">注册</h2>
                     <fieldset class="fieldset">
                         <label class="label">Phone</label>
                         <label class="input validator">
@@ -74,7 +73,7 @@ const login = async () => {
                             </svg>
                             <input 
                             v-model="formData.phone" type="text" class="tabular-nums" required placeholder="Phone"
-                                pattern="admin" minlength="5" maxlength="12" title="管理员账号admin">
+                                pattern="admin" minlength="5" maxlength="5" title="管理员账号admin">
                         </label>
                         <p class="validator-hint hidden">
                             请输入管理员账号admin
@@ -92,19 +91,14 @@ const login = async () => {
                             <input v-model="formData.password" type="password" pattern="1234" required placeholder="Password"
                                 minlength="4" title="测试密码1234">
                         </label>
+                                <div><span class="link link-hover" @click="router.push('/login')">返回登录</span></div>
                         <p class="validator-hint hidden">
                             请输入测试密码1234
                         </p>
-                        <span class="link link-hover" @click="router.push('/forgot')">忘记密码</span>
-                        <button class="btn btn-neutral mt-2 " :disabled="logining" @click="login"> Login <span v-show="logining" class="loading loading-infinity loading-lg"></span></button>
-                        <!-- 添加前往注册的链接 -->
-                        <div class="text-center mt-4">
-                            还没有账号？<span class="link link-hover" @click="router.push('/register')">前往注册</span>
-                        </div>
+                        <button class="btn btn-neutral mt-4 " :disabled="logining" @click="login">Register <span v-show="logining" class="loading loading-infinity loading-lg"></span></button>
                     </fieldset>
                 </div>
             </div>
         </div>
     </div>
 </template>
-

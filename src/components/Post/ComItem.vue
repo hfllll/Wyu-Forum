@@ -5,6 +5,7 @@ import { GetMoreComments, SetComment } from '@/api';
 import { v4 as uuidv4 } from 'uuid'
 import { onClickOutside } from '@vueuse/core'
 import Swal from 'sweetalert2'
+import { timeAgo } from '@/utils/timeAgo';
 
 interface ComItemProps {
   comment: FatherComment
@@ -86,7 +87,7 @@ const pushComment = async () => {
       <div class="flex justify-between">
         <div>
           <span class="font-medium">{{ comment.author }}</span>
-          <span class="text-sm text-base-content/60 ml-2">{{ comment.createTime }}</span>
+          <span class="text-sm text-base-content/60 ml-2">{{ timeAgo(comment.createTime) }}</span>
         </div>
         <button class="btn btn-ghost btn-xs btn-circle">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,7 +124,7 @@ const pushComment = async () => {
               <div class="flex justify-between">
                 <div>
                   <span class="font-medium">{{ reply.author }}</span>
-                  <span class="text-sm text-base-content/60 ml-2">{{ reply.createTime  }}</span>
+                  <span class="text-sm text-base-content/60 ml-2">{{  timeAgo(reply.createTime)  }}</span>
                 </div>
               </div>
               <p class="mt-1">{{ reply.content }}</p>
