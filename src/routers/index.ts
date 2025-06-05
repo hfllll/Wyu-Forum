@@ -20,6 +20,8 @@ const router = createRouter({
     { path: '/post/:id', name: 'Post' , component: () => import('@/views/PostDetail.vue') },
     { path: '/register' , name: 'Register' , component: () => import('@/views/Register.vue') },
     { path: '/forgot', name: 'Forgot' ,component: () => import('@/views/ForgotPassword.vue') },
+    { path: '/create', name: 'Forgot' ,component: () => import('@/views/CreatePost.vue') },
+    { path: '/profile', name: 'Profile' ,component: () => import('@/views/Profile.vue') },
   ],
 
   
