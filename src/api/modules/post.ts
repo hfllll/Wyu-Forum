@@ -1,6 +1,6 @@
 import { http } from '@/api/request'
 
-import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, SonComment, FollowAuthor, CollectParams, CommentGetParams, FatherComment, MoreCommentParams, PublishPostParams } from '@/types'
+import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, SonComment, FollowAuthor, CollectParams, CommentGetParams, FatherComment, MoreCommentParams, PublishPostParams, TopicParams } from '@/types'
 import type { ApiResponse,  PaginationResponse,  } from '@/api/type'
 
 // 获取帖子列表

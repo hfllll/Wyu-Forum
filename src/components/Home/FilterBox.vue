@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive, defineEmits } from 'vue';
+
+interface FilterEmit {
+    (e: 'filter-change', filter: 0 | 1 | 2): void
+}
+
+const emit = defineEmits<FilterEmit>()
+
 type Tab = {
     name: string,
     active: boolean
 }
+
 const tabs = reactive<Tab[]>([
     {
         name: '最新',
@@ -18,20 +26,22 @@ const tabs = reactive<Tab[]>([
         active: false
     }
 ])
-const handleTabClick = (tab: Tab) => {
-    tab.active = true
-    tabs.forEach(t => {
-        if (t.name !== tab.name) {
+
+const handleTabClick = (index: 0 | 1 | 2 = 0) => {
+    tabs[index].active = true
+    tabs.forEach((t, i) => {
+        if (i !== index) {
             t.active = false
         }
     })
+    emit('filter-change', index)
 }
 </script>
 
 <template>
     <div class="flex justify-between items-center mb-4">
-        <div class="tabs tabs-boxed">
-            <a class="tab" v-for="tab in tabs" :key="tab.name" :class="{ 'tab-active': tab.active }" @click="handleTabClick(tab)">{{ tab.name }}</a>
+        <div class="tabs tabs-boxed" >
+            <button class="tab" v-for="(tab, index) in tabs" :key="tab.name" :class="{ 'tab-active': tab.active }" @click="handleTabClick(index as 0 | 1 | 2)" >{{ tab.name }}</button>
         </div>
         <div class="join">
             <button class="join-item btn btn-sm">

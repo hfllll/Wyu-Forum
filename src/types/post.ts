@@ -20,7 +20,9 @@ export interface Post {
 // 帖子列表请求参数
 export interface PostsParams extends PaginationParams {
     keyword?: string,
-    tag?: string,
+    labelId?: string,
+    topicId?: string,
+    sortId: 0 | 1 | 2 // 0 | 1 | 2  0为最新 1为最热 2为推荐 默认为0
 }
 
 

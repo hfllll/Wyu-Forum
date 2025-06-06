@@ -5,12 +5,14 @@ import FilterBox from '@/components/Home/FilterBox.vue';
 import PostList from '@/components/Home/PostList.vue';
 import Pagination from '@/components/Home/Pagination.vue';
 import BackTop from '@/components/Base/BackTop.vue';
-import { getPostCategory, getPostList, getTrendingTopic } from '@/api';
-import type { Post, PostCategory, TrendingTopic, PaginationData } from '@/types';
+import { getPostCategory, getTrendingTopic, debouncedGetPostList } from '@/api';
+import type { Post, PostCategory, TrendingTopic, PaginationData, PostsParams } from '@/types';
+import router from '@/routers';
 
 const postList = ref<Post[]>([])
 const categoryList = ref<PostCategory[]>([])
 const topicList = ref<TrendingTopic[]>([])
+const isEmpty = ref<boolean>(false)
 
 const paginationData = reactive<PaginationData>({
   pages: 1,
@@ -19,18 +21,25 @@ const paginationData = reactive<PaginationData>({
   current: 1
 })
 
-const fetchPostList = async (num:number = 1, pageSize: number = 10) => {
+const postlistParams = reactive<PostsParams>({
+  pageNum: 1, 
+  pageSize : 10, 
+  sortId : 0
+})
+
+const fetchPostList = async () => {
+  isEmpty.value = false
+  postList.value = []
   try{
-    const { data: { records, total, size, pages, current } } = await getPostList({
-      pageNum: num,
-      pageSize: pageSize
-    })
+    const { data: { records, total, size, pages, current } } = await debouncedGetPostList.immediate(postlistParams)
     postList.value = records
     paginationData.total = total
     paginationData.pages = pages
     paginationData.size = size
     paginationData.current = current
-
+    if (!records.length) {
+      isEmpty.value = true
+    }
   }catch(err) {
     console.log('出现错误ERROR：', err);
   }
@@ -66,8 +75,10 @@ const paginationClick = async (index: number) => {
     targetPage = paginationData.current + 1;
   }
 
+  postlistParams.pageNum = targetPage
+
   // 获取数据
-  await fetchPostList(targetPage);
+  await fetchPostList();
   // 等待 DOM 更新
   await nextTick();
   // 检查页面是否可滚动
@@ -76,10 +87,19 @@ const paginationClick = async (index: number) => {
   }
 };
 
+const handleFilterChange = async (filter: 0 | 1 | 2 = 0) => {
+  postlistParams.sortId = filter
+  await fetchPostList()
+}
+
+const handleCategoryChange = async (catId: string) => {
+  postlistParams.labelId = catId
+  await fetchPostList()
+}
+
 onActivated(async () => {
   await Promise.all([fetchPostList(), fetchCategory(), fetchTopic()]);
 })
-
 </script>
 
 <template>
@@ -87,16 +107,31 @@ onActivated(async () => {
     <!-- 论坛主页内容区 -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
       <!-- 左侧边栏 -->
-      <LeftTabs :category-list="categoryList" :topic-list="topicList"/>
+      <LeftTabs :category-list="categoryList" :topic-list="topicList" @category-change="handleCategoryChange" />
 
       <!-- 主内容区 -->
       <div class="md:col-span-3">
         <!-- 筛选栏 -->
-        <FilterBox />
+        <FilterBox @filter-change="handleFilterChange" />
 
         <!-- 帖子列表 -->
         <div class="space-y-4 ">
-          <PostList :postList="postList" />
+          <div v-show="isEmpty" class="hero min-h-screen"
+            style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp);">
+            <div class="hero-overlay"></div>
+            <div class="hero-content text-neutral-content text-center">
+              <div class="max-w-md">
+                <h1 class="mb-5 text-5xl font-bold">Hello there</h1>
+                <p class="mb-5">
+                  Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
+                  quasi. In deleniti eaque aut repudiandae et a id nisi.
+                </p>
+                <button class="btn btn-primary" @click="router.push('/create')">Get Started</button>
+              </div>
+            </div>
+          </div>
+          <!-- 加载动画 -->
+          <PostList v-show="!isEmpty" :postList="postList" />
         </div>
 
         <!-- 分页 -->

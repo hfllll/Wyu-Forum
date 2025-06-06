@@ -4,7 +4,7 @@ export interface Topic{
   title: string, // 标题
   description: string, // 描述
   posts: number, // 帖子数量
-  followers: number, // 关注着数量
+  follows: number, // 关注着数量
   hasFollowed?: boolean // 号主是否已关注 没token不返回这个
 }
 
@@ -19,4 +19,8 @@ export interface TopicSearchParams {
   keyword: string
 }
 
-// 
+// 查询对应ID的话题的详情信息
+export interface TopicParams {
+  topicId?: string,
+  keyword?: string
+}

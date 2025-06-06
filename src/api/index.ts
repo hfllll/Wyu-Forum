@@ -11,3 +11,4 @@ export * from '@/api/modules/discover'
 
 // 导出所有类型
 export * from '@/api/type'
+export * from '@/api/debouncedApi'

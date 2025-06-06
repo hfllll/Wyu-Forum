@@ -21,7 +21,7 @@ const goTopic = (id: string) => {
   router.push({
     name: 'TopicDetail',
     params: {
-      id
+      id:id
     }
   })
 }
@@ -54,7 +54,7 @@ const goTopic = (id: string) => {
           <p>{{ topic.description }}</p>
           <div class="flex justify-between text-sm text-base-content/70 mt-2">
             <span>{{ topic.posts }} 帖子</span>
-            <span>{{ topic.followers }} 关注</span>
+            <span>{{ topic.follows }} 关注</span>
           </div>
           <div class="card-actions justify-end mt-4">
             <button v-if="topic.hasFollowed" class="btn btn-soft btn-secondary btn-sm animate__animated animate__wobble" @click="handleFollow(topic)">取消关注</button>

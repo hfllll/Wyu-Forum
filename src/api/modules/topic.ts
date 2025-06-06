@@ -1,10 +1,10 @@
 import { http } from '@/api/request'
 import type { ApiResponse } from '@/api/type'
-import type { CommentParams, FollowParams, Topic } from '@/types'
+import type {  FollowParams, PostsParams, Topic, TopicParams } from '@/types'
 
 // 话题列表获取
-export function getTopic() {
-  return http.get<ApiResponse<Topic[]>>('/topic/list')
+export function getTopic(params?: TopicParams) {
+  return http.get<ApiResponse<Topic[]>>('/topic/list', { params })
 }
 
 // 关注 or取消关注
