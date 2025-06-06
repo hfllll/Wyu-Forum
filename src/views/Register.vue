@@ -3,7 +3,7 @@
 import type { LoginParams, AlertInstance } from '@/types';
 import { goLogin } from '@/api';
 import { reactive, ref } from 'vue';
-import Alert from '@/components/Base/Alert.vue'
+
 import router from '@/routers';
 import { useUserStore } from '@/stores';
 import Swal from 'sweetalert2'
@@ -14,6 +14,7 @@ const formData = reactive<LoginParams>({
   phone: '',
   password: ''
 });
+
 const logining = ref<boolean>(false)
 
 const login = async () => {

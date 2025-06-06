@@ -20,7 +20,7 @@ const props = defineProps<RecommendationProps>()
           <div v-for="item in props.recommendations" :key="item.id" class="card bg-base-100 shadow-lg">
           <div class="card-body">
             <h2 class="card-title">{{ item.title }}</h2>
-            <p class="text-base-content/70">作者：{{ item.author }}</p>
+            <p class="text-base-content/70">作者：{{ item.authorName }}</p>
             <div class="card-actions justify-between mt-2">
               <div class="flex items-center gap-4 text-sm text-base-content/70">
                 <span class="flex items-center gap-1">

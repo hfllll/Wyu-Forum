@@ -1,6 +1,6 @@
 import { http } from '@/api/request'
 
-import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, SonComment, FollowAuthor, CollectParams, CommentGetParams, FatherComment, MoreCommentParams } from '@/types'
+import type { Post, PostsParams, PostCategory, TrendingTopic, LikeParams, PostDetailParams, PostDetail, CommentParams, SonComment, FollowAuthor, CollectParams, CommentGetParams, FatherComment, MoreCommentParams, PublishPostParams } from '@/types'
 import type { ApiResponse,  PaginationResponse,  } from '@/api/type'
 
 // 获取帖子列表
@@ -51,4 +51,9 @@ export function GetComments(params: CommentGetParams) {
 // 获取子评论接口
 export function GetMoreComments(params: MoreCommentParams ) {
     return http.get<ApiResponse<SonComment[]>>('/comment/more', { params })
+}
+
+// 发表帖子接口
+export function PublishPost(data: PublishPostParams) {
+    return http.post<ApiResponse>('/forum/post/add', data)
 }

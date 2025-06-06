@@ -19,7 +19,7 @@ export interface JoinParams {
 export interface Recommendations {
   id: string,
   title: string,
-  author: string,
+  authorName: string,
   likes: number,
   views: number
 }

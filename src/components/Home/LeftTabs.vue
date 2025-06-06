@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, defineProps } from 'vue'
 import type { PostCategory, TrendingTopic } from '@/types'
+import router from '@/routers';
 
 export interface LeftTabProps {
   categoryList: PostCategory[],
@@ -12,6 +13,14 @@ const selectedCategory = ref('1')
 
 const props = defineProps<LeftTabProps>()
 
+const goTopic = (id: string) => {
+  router.push({
+    name: 'TopicDetail',
+    params: {
+      id
+    }
+  })
+}
 </script>
 
 <template>
@@ -35,12 +44,12 @@ const props = defineProps<LeftTabProps>()
         
         <h2 class="card-title">热门话题</h2>
         <div class="flex flex-wrap gap-2">
-          <div v-for="(topic, index) in props.topicList" :key="index" class="badge badge-primary">
+          <div v-for="(topic, index) in props.topicList" :key="index" class="badge badge-primary cursor-pointer" @click="goTopic(topic.topicId)">
             {{ topic.title }}
           </div>
         </div>
         
-        <div class="mt-4">
+        <div class="mt-4" @click="router.push('/create')">
           <button class="btn btn-primary w-full">发布新帖</button>
         </div>
       </div>

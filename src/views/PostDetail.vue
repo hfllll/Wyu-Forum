@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { GetComments,  getPostDetail, SetComment } from '@/api'
 import type { PostData, RelatedPosts,  Author, FatherComment } from '@/types'
-import {  onMounted, ref, watch } from 'vue'
+import {  onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores'
 import PostContent from '@/components/Post/PostContent.vue'

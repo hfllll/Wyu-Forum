@@ -34,7 +34,7 @@ const goPost = (id:string) => {
 <template>
     <div v-if="!props.postList.length" class="space-y-6 p-4">
         <!-- 优化版骨架屏 -->
-        <template v-for="(index) in 3" :key="index">
+        <template v-for="() in 3" :key="index">
             <div class="card bg-base-100 shadow-md skeleton animate-pulse">
                 <div class="card-body">
                     <div class="flex items-start space-x-4">
@@ -76,7 +76,7 @@ const goPost = (id:string) => {
                         <div class="flex items-center text-sm text-base-content/70 mt-1">
                             <span>{{ post.authorName }}</span>
                             <span class="mx-2">•</span>
-                            <span>{{ timeAgo(post.createdAt) }}</span>
+                            <span>{{ timeAgo(post.createAt) }}</span>
                         </div>
                     </div>
                 </div>

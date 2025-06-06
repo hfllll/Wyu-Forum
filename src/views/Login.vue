@@ -3,7 +3,6 @@
 import type { LoginParams, AlertInstance } from '@/types';
 import { goLogin } from '@/api';
 import { reactive, ref } from 'vue';
-import Alert from '@/components/Base/Alert.vue'
 import router from '@/routers';
 import { useUserStore } from '@/stores';
 import Swal from 'sweetalert2'
@@ -22,17 +21,16 @@ const login = async () => {
         const res = await goLogin(formData)
         if (res.code === 200) {
             
+            userStore.setUserInfo(res.data)
             Swal.fire({
                 title: '恭喜你 登陆成功！即将前往主页',
                 // text: 'Do you want to continue',
                 icon: 'success',
                 confirmButtonText: '中！'
+            }).then(() => {
+                // router.go(-1)
+                router.go(-1)
             })
-            userStore.setUserInfo(res.data)
-            setTimeout(() => {
-                router.push('/')
-                logining.value = false
-            }, 1200)
         }
     }catch(err) {
         logining.value = false

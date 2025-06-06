@@ -11,7 +11,7 @@ export interface Post {
     tags: string[],
     likes: number,
     comments: number,
-    createdAt: string,
+    createAt: string,
     isLiked?: boolean,
     images: string,
     looks: number
@@ -156,3 +156,12 @@ export interface CommentGetParams {
 export interface MoreCommentParams {
     commentId: string // 该ID为父评论的id查出
 }
+
+// 发布帖子的接口
+export interface PublishPostParams {
+    title: string,
+    content: string,
+    labelId: string, // 分类ID
+    topic: string[] // 话题ID
+}
+
