@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-
+import { useRoute } from 'vue-router'
+const route = useRoute()
 
 </script>
 
@@ -13,18 +14,18 @@ import Footer from '@/components/Footer.vue'
         <div class="container mx-auto p-4 mb-10 relative">
 
             <router-view v-slot="{ Component }">
-                <transition 
+                <!-- <transition 
                     appear 
                     mode="out-in"
                     name="fade" 
-                    >
-                <!-- <transition 
+                    > -->
+                <transition 
                     mode="out-in"
                       enter-active-class="animate__animated animate__flipInY"
   leave-active-class="animate__animated animate__flipOutY"
-                    > -->
+                    >
                     <keep-alive :include="['Home', 'Topics', 'Discover']" :max="6">
-                        <component :is="Component" :key="$route.fullPath" />
+                        <component :is="Component" :key="route.fullPath" />
                     </keep-alive>
                 </transition>
             </router-view>

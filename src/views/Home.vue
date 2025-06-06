@@ -8,7 +8,7 @@ import BackTop from '@/components/Base/BackTop.vue';
 import { getPostCategory, getTrendingTopic, debouncedGetPostList } from '@/api';
 import type { Post, PostCategory, TrendingTopic, PaginationData, PostsParams } from '@/types';
 import router from '@/routers';
-
+import { debounce } from 'lodash';
 const postList = ref<Post[]>([])
 const categoryList = ref<PostCategory[]>([])
 const topicList = ref<TrendingTopic[]>([])
@@ -26,6 +26,8 @@ const postlistParams = reactive<PostsParams>({
   pageSize : 10, 
   sortId : 0
 })
+
+
 
 const fetchPostList = async () => {
   isEmpty.value = false

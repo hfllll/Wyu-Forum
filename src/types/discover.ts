@@ -21,6 +21,6 @@ export interface Recommendations {
   title: string,
   authorName: string,
   likes: number,
-  views: number
+  looks: number
 }
 
