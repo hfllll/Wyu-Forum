@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, onActivated, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import PostList from '@/components/Home/PostList.vue'
 import Pagination from '@/components/Home/Pagination.vue'
 import BackTop from '@/components/Base/BackTop.vue'
 import { getPostList } from '@/api'
 import type { Post, PaginationData } from '@/types'
-
+import router from '@/routers'
+import { watch } from 'vue'
 const route = useRoute()
 const keyword = computed(() => route.query.keyword as string || '')
 
@@ -22,7 +23,7 @@ const paginationData = ref<PaginationData>({
 })
 
 // 获取搜索结果
-const fetchSearchResults = async (pageNum: number = 1) => {
+const fetchSearchResults = async (pageNum: number = 1, sortId: 0 | 1 | 2 = 0) => {
   if (!keyword.value) return
   
   isLoading.value = true
@@ -32,7 +33,8 @@ const fetchSearchResults = async (pageNum: number = 1) => {
     const { data: { records, total, size, pages, current } } = await getPostList({
       pageNum,
       pageSize: 10,
-      keyword: keyword.value
+      keyword: keyword.value,
+      sortId
     })
     
     postList.value = records
@@ -72,14 +74,18 @@ const paginationClick = async (index: number) => {
 
 // 过滤选项
 const sortOptions = [
-  { value: 'latest', label: '最新发布' },
-  { value: 'popular', label: '最多点赞' },
-  { value: 'comments', label: '最多评论' }
+  { value: 0, label: '最新发布' },
+  { value: 1, label: '最热热门' },
+  { value: 2, label: '最相关' }
 ]
-const currentSort = ref('latest')
+const currentSort = ref<0 | 1 | 2>(0)
 
-onActivated(() => {
+onMounted(() => {
   fetchSearchResults()
+})
+
+watch(currentSort, (newVal) => {
+  fetchSearchResults(1, newVal)
 })
 </script>
 
@@ -101,7 +107,7 @@ onActivated(() => {
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-2">
           <span class="text-sm font-medium">排序方式:</span>
-          <select v-model="currentSort" class="select select-sm select-bordered">
+          <select v-model="currentSort" class="select select-sm select-bordered" >
             <option v-for="option in sortOptions" :key="option.value" :value="option.value">
               {{ option.label }}
             </option>
@@ -120,7 +126,7 @@ onActivated(() => {
     </div>
     
     <!-- 加载状态 -->
-    <div v-if="isLoading" class="flex justify-center py-12">
+    <div v-if="isLoading" class="flex justify-center py-12 h-90 items-center">
       <span class="loading loading-spinner loading-lg text-primary"></span>
     </div>
     
@@ -134,7 +140,7 @@ onActivated(() => {
         <p class="text-base-content/70">
           没有找到与"{{ keyword }}"相关的内容，请尝试其他关键词
         </p>
-        <button class="btn btn-primary mt-4">返回首页</button>
+        <button class="btn btn-primary mt-4" @click="router.push('/')">返回首页</button>
       </div>
     </div>
     

@@ -5,7 +5,7 @@ const Home = () => import( /* webpackPreload: true */'@/views/Home.vue')
 
 const router = createRouter({
   history: createWebHistory(),
-  scrollBehavior( ) {
+  scrollBehavior() {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({ left: 0, top: 0 })
@@ -30,8 +30,9 @@ const router = createRouter({
 })
 
 // 只有特地页面才需要登录
-const needLogin = ['/create', '/settings', '/profile/:id', '/profile']
-router.beforeEach((to, from, next) => {
+const needLogin = ['/create', '/settings', '/profile/:id', '/profile', '/post/:id']
+// const needLogin = ['/create', '/settings', ]
+router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
   if (needLogin.includes(to.path)) {
     if (!userStore.isLoggedIn) {

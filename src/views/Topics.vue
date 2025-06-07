@@ -11,15 +11,20 @@ const topicList = ref<Topic[]>([])
 
 const isEmpty = ref<boolean>(false)
 
+const loading = ref<boolean>(false)
+
 const fetchTopicList = async () => {
  const { data } = await getTopic()
  topicList.value = data
+ isEmpty.value = data.length === 0
 }
 
 const handleSearch = async (keyword: string) => {
+  loading.value = true
   const { data } = await getTopic({ keyword })
   topicList.value = data
   isEmpty.value = data.length === 0
+  loading.value = false
 }
 
 const createTopic = () => {
@@ -53,7 +58,7 @@ onMounted( () => {
     <TopicSearch @search="handleSearch" />
     
     <!-- 空状态 -->
-    <div v-if="isEmpty" class="card bg-base-100 shadow-xl p-12 text-center"> 
+    <div v-if="isEmpty && !loading" class="card bg-base-100 shadow-xl p-12 text-center"> 
       <div class="flex flex-col items-center gap-4">
         <!-- 空状态图标 -->
         <div class="w-24 h-24 rounded-full bg-base-200 flex items-center justify-center">
@@ -78,7 +83,13 @@ onMounted( () => {
       </div>
     </div>
 
-    <TopicList v-else :topic-list='topicList' />
+
+    <TopicList v-else-if="!loading" :topic-list='topicList' />
+
+    <div v-else class="flex justify-center items-center h-90">
+      <span class="loading loading-spinner loading-lg"></span>
+    </div>
+
     
     <!-- 创建话题按钮 -->
     <div class="fixed bottom-8 right-8">

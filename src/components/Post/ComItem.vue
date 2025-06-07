@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { onClickOutside } from '@vueuse/core'
 import Swal from 'sweetalert2'
 import { timeAgo } from '@/utils/timeAgo';
+import router from '@/routers';
 
 interface ComItemProps {
   comment: FatherComment
@@ -74,19 +75,26 @@ const pushComment = async () => {
   isReply.value = false
 }
 
+const goAuthor = (ID:string) => {
+  router.push({
+    name: 'ProfileWithId',
+    params: { id: ID}
+  })
+}
+
 </script>
 
 <template>
   <div class="flex items-start gap-3">
     <div class="avatar">
-      <div class="w-10 h-10 rounded-full">
+      <div class="w-10 h-10 rounded-full cursor-pointer hover:scale-110" @click="goAuthor(comment.userId)">
         <img :src="comment.avatar" alt="用户头像" />
       </div>
     </div>
     <div class="flex-1">
       <div class="flex justify-between">
-        <div>
-          <span class="font-medium">{{ comment.author }}</span>
+        <div @click="goAuthor(comment.userId)">
+          <span class="font-medium cursor-pointer hover:underline">{{ comment.author }}</span>
           <span class="text-sm text-base-content/60 ml-2">{{ timeAgo(comment.createTime) }}</span>
         </div>
         <button class="btn btn-ghost btn-xs btn-circle">
@@ -116,14 +124,14 @@ const pushComment = async () => {
         <div v-for="reply in comment.commentList" :key="reply.id" class="mt-3">
           <div class="flex items-start gap-3">
             <div class="avatar">
-              <div class="w-8 h-8 rounded-full">
+              <div class="w-8 h-8 rounded-full cursor-pointer hover:scale-105" @click=goAuthor(reply.userId)>
                 <img :src="props.avatar" alt="用户头像" />
               </div>
             </div>
             <div class="flex-1">
               <div class="flex justify-between">
                 <div>
-                  <span class="font-medium">{{ reply.author }}</span>
+                  <span class="font-medium cursor-pointer hover:underline " @click="goAuthor(reply.userId)">{{ reply.author }}</span>
                   <span class="text-sm text-base-content/60 ml-2">{{  timeAgo(reply.createTime)  }}</span>
                 </div>
               </div>

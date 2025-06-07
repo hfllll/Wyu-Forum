@@ -14,17 +14,17 @@ const route = useRoute()
         <div class="container mx-auto p-4 mb-10 relative">
 
             <router-view v-slot="{ Component }">
-                <!-- <transition 
+                <transition 
                     appear 
                     mode="out-in"
                     name="fade" 
-                    > -->
-                <transition 
+                    >
+                <!-- <transition 
                     mode="out-in"
                       enter-active-class="animate__animated animate__flipInY"
   leave-active-class="animate__animated animate__flipOutY"
-                    >
-                    <keep-alive :include="['Home', 'Topics', 'Discover']" :max="6">
+                    > -->
+                    <keep-alive :include="['Home', 'Topics', 'Discover', 'Settings', 'Profile']" :max="6">
                         <component :is="Component" :key="route.fullPath" />
                     </keep-alive>
                 </transition>

@@ -29,6 +29,14 @@ const goPost = (id:string) => {
     })
 }
 
+const goAuthor = (id:string) => {
+
+    router.push({
+        name: 'ProfileWithId',
+        params: { id: id }
+    })
+}
+
 </script>
 
 <template>
@@ -66,15 +74,15 @@ const goPost = (id:string) => {
             <div class="card-body ">
             <div class="flex items-start justify-between ">
                 <div class="flex items-start space-x-4">
-                    <div class="avatar">
-                        <div class="w-10 h-10 rounded-full">
+                    <div class="avatar" @click="goAuthor(post.authorId)">
+                        <div class="w-10 h-10 rounded-full hover:scale-110 cursor-pointer" >
                             <img :src="post.avatar" alt="用户头像" />
                         </div>
                     </div>
                     <div>
                         <h2 class="card-title hover:text-primary cursor-pointer" @click="goPost(post.id)">{{ post.title }}</h2>
-                        <div class="flex items-center text-sm text-base-content/70 mt-1">
-                            <span>{{ post.authorName }}</span>
+                        <div class="flex items-center text-sm text-base-content/70 mt-1 cursor-pointer" @click="goAuthor(post.authorId)">
+                            <span class="hover:underline ">{{ post.authorName }}</span>
                             <span class="mx-2">•</span>
                             <span>{{ timeAgo(post.createAt) }}</span>
                         </div>

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { followAuthor } from '@/api';
+import router from '@/routers';
 import type { Author } from '@/types';
 interface AuthorProps {
   author: Author | null
@@ -10,10 +11,19 @@ const props = defineProps<AuthorProps>()
 const handleFollow = async (author: Author | null) => {
   if ( !author ) return
   await followAuthor({
-    authorId: author.authorID,
+    authorId: author.authorId,
     toFollow: !author.isFollowd
   })
   author.isFollowd = !author.isFollowd
+}
+
+const goAuthor = () => {
+  router.push({
+    name: 'ProfileWithId',
+    params: {
+      id: props.author?.authorId
+    }
+  })
 }
 </script>
 
@@ -22,11 +32,11 @@ const handleFollow = async (author: Author | null) => {
       <template v-if="props.author">
     <div class="card-body items-center text-center">
       <div class="avatar">
-        <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+        <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 cursor-pointer hover:ring-offset-6" @click="goAuthor">
           <img :src="props.author?.avatar" alt="用户头像" />
         </div>
       </div>
-      <h2 class="card-title mt-2">{{ props.author?.author }}</h2>
+      <h2 class="card-title mt-2 cursor-pointer hover:text-primary" @click="goAuthor">{{ props.author?.author }}</h2>
       <p class="text-sm text-base-content/60">活跃会员</p>
       <div class="flex gap-4 mt-2">
         <div class="text-center">

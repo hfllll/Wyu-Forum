@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import { Collect, Like } from '@/api';
+import router from '@/routers';
 import type { PostData } from '@/types';
 import { defineProps } from 'vue';
+
 interface ContentProps {
   post: PostData | null
 }
+
 const props = defineProps<ContentProps>()
 
 const handleCollect = async ( post: PostData ) => {
@@ -23,6 +26,14 @@ const handleLike = async (post: PostData) => {
   post.isLike = !post.isLike
   post.likes += num
 }
+const goAuthor = () => {
+  router.push({
+    name: 'ProfileWithId',
+    params: {
+      id: props.post?.authorId
+    }
+  })
+}
 </script>
 
 <template>
@@ -33,13 +44,13 @@ const handleLike = async (post: PostData) => {
     <div>
       <h1 class="text-2xl font-bold mb-2">{{ props.post.title }}</h1>
       <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <div class="avatar">
+        <div class="flex items-center space-x-2" >
+          <div class="avatar cursor-pointer hover:scale-110" @click="goAuthor"> 
             <div class="w-8 h-8 rounded-full">
               <img :src="props.post.avatar" alt="用户头像" />
             </div>
           </div>
-          <span class="font-medium">{{ props.post.author }}</span>
+          <span class="font-medium cursor-pointer hover:underline" @click="goAuthor">{{ props.post.author }}</span>
           <span class="text-base-content/60">{{ props.post.createdAt }}</span>
         </div>
         <div class="flex items-center space-x-2 text-base-content/60" >

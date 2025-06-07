@@ -22,7 +22,9 @@ export interface PostsParams extends PaginationParams {
     keyword?: string,
     labelId?: string,
     topicId?: string,
-    sortId: 0 | 1 | 2 // 0 | 1 | 2  0为最新 1为最热 2为推荐 默认为0
+    userId?: string, // 获取用户行为帖子使用的参数
+    sortId?: 0 | 1 | 2 // 0 | 1 | 2  0为最新 1为最热 2为推荐 默认为0
+    type?: 1 | 2 | 3 // 1代表发布的帖子，2代表点赞的帖子，3代表收藏的帖子
 }
 
 
@@ -81,7 +83,7 @@ export interface PostData {
     comments: number // 帖子数量
     author: string
     avatar: string
-    authorID: string
+    authorId: string
     isLike: boolean // true为点赞了 false为没点赞 登录才会有true的情况
 }
 
@@ -98,7 +100,7 @@ export interface Author {
     postNum: number // 帖子数量
     likeNum: number // 获赞数量
     fansNUm: number // 粉丝数量
-    authorID: string
+    authorId: string
     isFollowd?: boolean // 作者是否被我关注了 如果是查看本人的帖子 该值不返回
 }
 

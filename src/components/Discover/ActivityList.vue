@@ -26,7 +26,26 @@ const handleJoin = async (activity: Activity) => {
         <button class="btn btn-sm btn-link">查看全部</button>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- 骨架屏 -->
+      <div v-if="!props.activities || props.activities.length === 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div v-for="i in 4" :key="i" class="card bg-base-100 shadow-lg">
+          <figure class="skeleton h-48 w-full"></figure>
+          <div class="card-body">
+            <div class="skeleton h-8 w-3/4 mb-2"></div>
+            <div class="flex flex-col gap-2">
+              <div class="skeleton h-4 w-full"></div>
+              <div class="skeleton h-4 w-2/3"></div>
+              <div class="skeleton h-4 w-1/2"></div>
+            </div>
+            <div class="card-actions justify-end mt-2">
+              <div class="skeleton h-8 w-20"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 实际内容 -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div v-for="activity in props.activities" :key="activity.id" class="card bg-base-100 shadow-lg">
           <figure><img :src="activity.image" alt="活动图片" class="h-48 w-full object-cover" /></figure>
           <div class="card-body">
