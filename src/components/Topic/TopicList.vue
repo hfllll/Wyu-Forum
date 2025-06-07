@@ -15,6 +15,7 @@ const handleFollow = async (topic: Topic) => {
     isFollow: topic.hasFollowed ? false : true
   })
   topic.hasFollowed = !topic.hasFollowed
+  topic.follows = topic.hasFollowed ? topic.follows + 1 : topic.follows - 1
 }
 
 const goTopic = (id: string) => {

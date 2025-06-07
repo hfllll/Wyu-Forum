@@ -1,6 +1,6 @@
 import { http } from '@/api/request'
 import type { ApiResponse } from '@/api/type'
-import type {  FollowParams, PostsParams, Topic, TopicParams } from '@/types'
+import type {  FollowParams, Topic, TopicParams } from '@/types'
 
 // 话题列表获取
 export function getTopic(params?: TopicParams) {

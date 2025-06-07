@@ -3,6 +3,7 @@ export  interface UserInfo {
   name: string
   avatar: string
   token:string
+  bio: string
 }
 
 export interface LoginParams {
@@ -30,4 +31,15 @@ export interface UserProfile {
 // 获取个人信息接口的传递参数
 export interface ProfileParams {
   userId: string
+}
+
+// 上传头像图片接口
+export type UploadAvatarParams = FormData
+
+// 保存个人信息的接口
+export interface SaveProfileParams {
+  password?: string // 新密码
+  oldPassword?: string // 旧密码
+  avatar?: string // 头像
+  bio?: string // 个性签名
 }

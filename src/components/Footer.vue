@@ -1,10 +1,55 @@
+<script setup lang="ts">
+import Swal from 'sweetalert2'
+import { ref } from 'vue'
+
+const year = ref(new Date().getFullYear())
+
+const handleAboutUs = () => {
+    Swal.fire({
+        title: '关于我们',
+        text: '武夷学院最帅的男人--陈佳明',
+        imageUrl: '/chengjiaming.webp',
+        confirmButtonText: '确定'
+    })
+}
+
+const handleContactUs = () => {
+    Swal.fire({
+        title: '联系我们',
+        text: '双手受伤但无人驾驶自动挂档两小时--素春玲',
+        imageUrl: '/suchunling.webp',
+        confirmButtonText: '中'
+    })
+}
+
+const handleRecruitment = () => {
+    Swal.fire({
+        title: '招聘信息',
+        text: '曾在十分钟找出89个网站的---郑宇辰',
+        imageUrl: '/zhengyucheng.webp',
+        confirmButtonText: '记住了'
+    })
+}
+
+const handleJoinUs = () => {
+    Swal.fire({
+        title: '加入我们',
+        text: '武夷学院超能露战队队长---鸟语选',
+        imageUrl: '/liaoyuxuan.webp',
+        confirmButtonText: '记住了'
+    })
+}
+
+
+</script>
+
 <template>
     <footer class="footer footer-horizontal footer-center bg-base-300 text-base-content rounded p-10">
-        <nav class="grid grid-flow-col gap-4">
-            <a class="link link-hover">关于我们</a>
-            <a class="link link-hover">联系我们</a>
-            <a class="link link-hover">招聘信息</a>
-            <a class="link link-hover">加入我们</a>
+        <nav class="grid grid-flow-col gap-4   ">
+            <a class="link link-hover" @click="handleAboutUs">关于我们</a>
+            <a class="link link-hover" @click="handleContactUs">联系我们</a>
+            <a class="link link-hover" @click="handleRecruitment">招聘信息</a>
+            <a class="link link-hover" @click="handleJoinUs">加入我们</a>
         </nav>
         <nav>
             <div class="grid grid-flow-col gap-4">
@@ -35,7 +80,7 @@
             </div>
         </nav>
         <aside>
-            <p>Copyright © {{ new Date().getFullYear() }} - 最终解释权归WYU论坛所有</p>
+            <p>Copyright © {{ year }} - 最终解释权归WYU论坛所有</p>
         </aside>
     </footer>
 </template>

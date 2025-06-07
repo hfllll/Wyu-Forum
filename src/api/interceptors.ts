@@ -20,7 +20,7 @@ export function setupInterceptors(instance: AxiosInstance):void {
     // 响应拦截器
     instance.interceptors.response.use(
         (response: AxiosResponse) => {
-            const { code, data, message } = response.data;
+            const { code,  message } = response.data;
             if (code === 200 || code === 0) {
                 return response;
             } else {

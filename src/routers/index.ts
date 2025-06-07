@@ -30,7 +30,7 @@ const router = createRouter({
 })
 
 // 只有特地页面才需要登录
-const needLogin = ['/create', '/settings', '/profile/:id', '/profile', '/post/:id']
+const needLogin = ['/create', '/settings', '/profile', '/post']
 // const needLogin = ['/create', '/settings', ]
 router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()

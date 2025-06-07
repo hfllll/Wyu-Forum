@@ -42,7 +42,7 @@ const goAuthor = (id:string) => {
 <template>
     <div v-if="!props.postList.length" class="space-y-6 p-4">
         <!-- 优化版骨架屏 -->
-        <template v-for="() in 3" :key="index">
+        <template v-for="() in 3" :key="i">
             <div class="card bg-base-100 shadow-md skeleton animate-pulse">
                 <div class="card-body">
                     <div class="flex items-start space-x-4">
@@ -69,10 +69,10 @@ const goAuthor = (id:string) => {
             </div>
         </template>
     </div>
-    <div v-else class="space-y-4">
-        <div v-for="post in props.postList" :key="post.id" class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow  ">
-            <div class="card-body ">
-            <div class="flex items-start justify-between ">
+    <div v-else class="space-y-4 post-list">
+        <div v-for="post in props.postList" :key="post.id" class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow post-card">
+            <div class="card-body">
+            <div class="flex items-start justify-between">
                 <div class="flex items-start space-x-4">
                     <div class="avatar" @click="goAuthor(post.authorId)">
                         <div class="w-10 h-10 rounded-full hover:scale-110 cursor-pointer" >
@@ -80,9 +80,9 @@ const goAuthor = (id:string) => {
                         </div>
                     </div>
                     <div>
-                        <h2 class="card-title hover:text-primary cursor-pointer" @click="goPost(post.id)">{{ post.title }}</h2>
+                        <h2 class="card-title hover:text-primary cursor-pointer line-clamp-1" @click="goPost(post.id)">{{ post.title }}</h2>
                         <div class="flex items-center text-sm text-base-content/70 mt-1 cursor-pointer" @click="goAuthor(post.authorId)">
-                            <span class="hover:underline ">{{ post.authorName }}</span>
+                            <span class="hover:underline">{{ post.authorName }}</span>
                             <span class="mx-2">•</span>
                             <span>{{ timeAgo(post.createAt) }}</span>
                         </div>
@@ -104,7 +104,7 @@ const goAuthor = (id:string) => {
                 </div>
             </div>
 
-            <p class="text-base-content/80 mt-2">{{ post.content }}</p>
+            <p class="text-base-content/80 mt-2 line-clamp-2 post-content">{{ post.content }}</p>
 
             <div class="flex flex-wrap gap-1 mt-2">
                 <span v-for="(tag, index) in post.tags" :key="index" class="badge badge-outline">{{ tag }}</span>
@@ -144,3 +144,6 @@ const goAuthor = (id:string) => {
         </div>
     </div>
 </template>
+
+<style scoped>
+</style>

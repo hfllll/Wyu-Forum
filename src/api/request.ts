@@ -23,6 +23,16 @@ export const http = {
         return request.get(url, config).then(res => res.data)
     },
     post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+        // 如果data是FormData，自动设置正确的Content-Type (浏览器会自动设置带boundary的multipart/form-data)
+        // if (data instanceof FormData) {
+        //     return request.post(url, data, {
+        //         ...config,
+        //         headers: {
+        //             ...config?.headers,
+        //             'Content-Type': 'multipart/form-data'
+        //         }
+        //     }).then(res => res.data)
+        // }
         return request.post(url, data, config).then(res => res.data)
     },
     put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {

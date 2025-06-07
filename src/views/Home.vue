@@ -8,11 +8,13 @@ import BackTop from '@/components/Base/BackTop.vue';
 import { getPostCategory, getTrendingTopic, debouncedGetPostList } from '@/api';
 import type { Post, PostCategory, TrendingTopic, PaginationData, PostsParams } from '@/types';
 import router from '@/routers';
-import { debounce } from 'lodash';
+
 const postList = ref<Post[]>([])
 const categoryList = ref<PostCategory[]>([])
 const topicList = ref<TrendingTopic[]>([])
 const isEmpty = ref<boolean>(false)
+// 添加布局状态
+const currentLayout = ref<'list' | 'grid'>('list')
 
 const paginationData = reactive<PaginationData>({
   pages: 1,
@@ -99,6 +101,11 @@ const handleCategoryChange = async (catId: string) => {
   await fetchPostList()
 }
 
+// 添加布局切换处理函数
+const handleLayoutChange = (layout: 'list' | 'grid') => {
+  currentLayout.value = layout;
+}
+
 onActivated(async () => {
   await Promise.all([fetchPostList(), fetchCategory(), fetchTopic()]);
 })
@@ -114,7 +121,7 @@ onActivated(async () => {
       <!-- 主内容区 -->
       <div class="md:col-span-3">
         <!-- 筛选栏 -->
-        <FilterBox @filter-change="handleFilterChange" />
+        <FilterBox @filter-change="handleFilterChange" @layout-change="handleLayoutChange" />
 
         <!-- 帖子列表 -->
         <div class="space-y-4 ">
@@ -132,8 +139,8 @@ onActivated(async () => {
               </div>
             </div>
           </div>
-          <!-- 加载动画 -->
-          <PostList v-show="!isEmpty" :postList="postList" />
+          <!-- 帖子列表，添加布局类 -->
+          <PostList v-show="!isEmpty" :postList="postList" :class="{ 'grid-layout': currentLayout === 'grid' }" />
         </div>
 
         <!-- 分页 -->
@@ -144,4 +151,15 @@ onActivated(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* 网格布局样式 */
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+/* 列表布局是默认的，不需要特殊样式 */
+</style>
 
