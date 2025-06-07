@@ -1,8 +1,8 @@
 # WYU Forum (武院论坛)
 
-<div align="center">
-  <img src="public/logo.png" alt="WYU Forum Logo" width="200">
-</div>
+![1749309200113](https://github.com/user-attachments/assets/ce6654a7-13fe-48f3-a674-174c91e76475)
+
+
 
 ## 项目演示 | Project Demo | プロジェクトデモ
 
