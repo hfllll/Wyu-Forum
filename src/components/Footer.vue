@@ -7,8 +7,9 @@ const year = ref(new Date().getFullYear())
 const handleAboutUs = () => {
     Swal.fire({
         title: '关于我们',
-        text: '武夷学院最帅的男人--陈佳明',
-        imageUrl: '/chengjiaming.webp',
+        
+        text: '曾在十分钟找出89个网站的---郑宇辰',
+        imageUrl: '/zhengyucheng.webp',
         confirmButtonText: '确定'
     })
 }
@@ -16,8 +17,9 @@ const handleAboutUs = () => {
 const handleContactUs = () => {
     Swal.fire({
         title: '联系我们',
-        text: '双手受伤但无人驾驶自动挂档两小时--素春玲',
-        imageUrl: '/suchunling.webp',
+        text: '武夷学院最帅的男人--陈佳明',
+        imageUrl: '/chengjiaming.webp',
+        
         confirmButtonText: '中'
     })
 }
@@ -25,8 +27,8 @@ const handleContactUs = () => {
 const handleRecruitment = () => {
     Swal.fire({
         title: '招聘信息',
-        text: '曾在十分钟找出89个网站的---郑宇辰',
-        imageUrl: '/zhengyucheng.webp',
+        text: '人寿区顶流热门男主--素春玲',
+        imageUrl: '/suchunling.webp',
         confirmButtonText: '记住了'
     })
 }
