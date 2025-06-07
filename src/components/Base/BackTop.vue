@@ -14,7 +14,7 @@ interface BacktopProps {
 const props = withDefaults(defineProps<BacktopProps>(), {
   visibilityHeight: 200,
   right: 10,
-  top: 440
+  top: 400
 })
 
 const { y : scrollY } = useWindowScroll()

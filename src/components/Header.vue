@@ -163,7 +163,7 @@ onMounted(() => {
                     <li>
                         <router-link to="/settings">设置</router-link>
                     </li>
-                    <li @click="handleLogout"><a>退出</a></li>
+                    <li @click="handleLogout"><a>{{ userStore.isLoggedIn ? '退出' : '登录' }}</a></li>
                 </ul>
             </div>
         </div>

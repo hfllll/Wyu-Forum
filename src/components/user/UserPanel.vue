@@ -126,7 +126,7 @@ const props = defineProps<PanelProps>()
           <p class="text-base-content/80 mt-4">{{ userProfile?.bio }}</p>
           
           <!-- 统计信息 -->
-          <div class="stats stats-horizontal bg-base-200 shadow mt-4">
+          <div class="stats stats-horizontal bg-base-200 shadow mt-4 scroll-auto w-full max-w-90">
             <div class="stat place-items-center">
               <div class="stat-value text-primary">{{ userProfile?.postCount }}</div>
               <div class="stat-desc">发布帖子</div>

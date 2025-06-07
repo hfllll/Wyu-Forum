@@ -26,6 +26,8 @@ const router = createRouter({
     { path: '/profile/:id', name: 'ProfileWithId' ,component: () => import('@/views/Profile.vue') },
     { path: '/profile', name: 'Profile' ,component: () => import('@/views/Profile.vue') },
     { path: '/search', name: 'Search' ,component: () => import('@/views/SearchResults.vue') },
+    // { path: '/:pathMatch(.*)*', name: 'NotFound' ,component: () => import('@/views/404.vue') },
+    {path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('@/views/404.vue')}
   ],
 })
 
