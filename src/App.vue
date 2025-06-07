@@ -2,7 +2,7 @@
 import Layout from '@/components/Layout.vue'
 import { onMounted } from 'vue'
 import Swal from 'sweetalert2'
-// 
+
 onMounted(() => {
   Swal.fire({
     title: '千万不要这样做！',
